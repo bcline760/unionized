@@ -1,0 +1,7 @@
+**/node_modules/*
+**/bin/*
+**/obj/*
+.DS_Store
+._.DS_Store
+**/.vs/*
+**/.vscode/*

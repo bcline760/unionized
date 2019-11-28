@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-center h-100">
+    <div class="card">
+      <div class="card-header">
+        <h3>Sign In</h3>
+      </div>
+      <div class="card-body" *ngIf="!isLoading else load_template">
+        <form #loginForm>
+          <div class="input-group form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="username" required [(ngModel)]="model.username" #username="ngModel"
+                   name="username">
+          </div>
+          <div class="alert alert-danger" [hidden]="username.valid || username.pristine">
+            Please provide your username
+          </div>
+          <div class="input-group form-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-key"></i></span>
+            </div>
+            <input type="password" class="form-control" placeholder="password" [(ngModel)]="model.password" #password="ngModel"
+                   required name="password">
+          </div>
+          <div class="alert alert-danger" [hidden]="password.valid || password.pristine">
+            Please provide your password.
+          </div>
+          <div class="row align-items-center remember">
+            <input type="checkbox" name="remember">Remember Me
+          </div>
+          <div class="form-group">
+            <input type="button" value="Login" class="btn float-right login_btn" (click)="onLogin()">
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <div [hidden]="!hasFailed" class="alert alert-danger">
+          There was a problem processing your login request. Please try again.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
