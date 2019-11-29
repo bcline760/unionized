@@ -17,8 +17,4 @@
     <ProjectReference Include="..\..\core\Unionized.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>

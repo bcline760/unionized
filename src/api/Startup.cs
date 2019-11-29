@@ -22,11 +22,15 @@ namespace Unionized.Api
     {
         public Startup(IWebHostEnvironment env)
         {
+            IsDevelopment = env.IsDevelopment();
+
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+
             // In ASP.NET Core 3.0 env will be an IWebHostEnvironment , not IHostingEnvironment.
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"{appDir}/unionized/appsettings.json", optional: true, reloadOnChange: true)
+                //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             this.Configuration = builder.Build();
         }
@@ -34,6 +38,8 @@ namespace Unionized.Api
         public IConfigurationRoot Configuration { get; private set; }
 
         public ILifetimeScope AutofacContainer { get; private set; }
+
+        public bool IsDevelopment { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -53,9 +59,6 @@ namespace Unionized.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var config = Configuration.Get<UnionizedConfiguration>();
-            config.Certificate.Password = Environment.GetEnvironmentVariable("CERTIFICATE_PASSWORD");
-            config.ServiceAccount.Password = Environment.GetEnvironmentVariable("SVC_ACCOUNT_PASSWORD");
-
             builder.RegisterInstance<UnionizedConfiguration>(config).SingleInstance();
             RegisterModules.Register(builder, config);
         }
@@ -67,9 +70,10 @@ namespace Unionized.Api
             // can use the convenience extension method GetAutofacRoot.
             this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
-            if (env.IsDevelopment())
+            if (IsDevelopment)
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("CorsPolicy");
             }
 
             app.UseHttpsRedirection();
@@ -77,8 +81,6 @@ namespace Unionized.Api
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {

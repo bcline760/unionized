@@ -9,7 +9,7 @@ namespace Unionized.Model.Database
     public class NetworkLogModel : UnionizedModel
     {
         [Column("log_date"), Required]
-        public string LogDate { get; set; }
+        public DateTime LogDate { get; set; }
 
         [Column("rule"), Required]
         public string Rule { get; set; }

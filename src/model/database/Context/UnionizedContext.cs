@@ -9,10 +9,14 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Unionized.Model.Database.Context
 {
-    public class UnionizedContext:DbContext
+    internal class UnionizedContext : DbContext, IUnionizedContext
     {
         public virtual DbSet<NetworkLogModel> NetworkLogs { get; set; }
+
         public virtual DbSet<UserTokenModel> UserTokens { get; set; }
+
+        public virtual DbContext Context => this;
+
         public UnionizedContext(DbContextOptions<UnionizedContext> options) : base(options)
         {
         }
@@ -24,7 +28,9 @@ namespace Unionized.Model.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<NetworkLogModel>();
+            modelBuilder.Entity<UserTokenModel>();
+            modelBuilder.Entity<AppRoleModel>();
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))

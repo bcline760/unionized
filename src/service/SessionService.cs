@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Unionized.Contract.Service;
 using Unionized.Contract;
-using System.Security.Claims;
+using Unionized.Contract.Repository;
 
 namespace Unionized.Service
 {
     public class SessionService : ISessionService
     {
-        private ILdap _ldap = null;
-        private IEncryptionService _encryption = null;
-        private UnionizedConfiguration _config = null;
-        private ITokenService _tokenSvc = null;
+        private readonly ILdap _ldap = null;
+        private readonly UnionizedConfiguration _config = null;
+        private readonly ITokenService _tokenSvc = null;
+        private readonly IRoleRepository _roleRepo = null;
 
-        public SessionService(ILdap ldap, IEncryptionService encryption,
+        public SessionService(ILdap ldap, IRoleRepository role,
             ITokenService tokenSvc, UnionizedConfiguration config)
         {
             _ldap = ldap;
-            _encryption = encryption;
             _tokenSvc = tokenSvc;
             _config = config;
+            _roleRepo = role;
         }
 
         public async Task<LogonResponse> AuthenticateAsync(LogonRequest request)
@@ -48,46 +48,39 @@ namespace Unionized.Service
                 throw new InvalidOperationException("Missing AD user");
 
             DateTime expiration = request.Persist ? DateTime.MaxValue : DateTime.Now.AddHours(6);
-            RoleType role = GetRoleFromGroups(ldapUser.MemberOf);
-            var claims = new Claim[]
+            RoleType role = await GetRoleFromGroups(ldapUser.MemberOf);
+
+            var tokenRequest = new TokenRequest
             {
-                new Claim(ClaimTypes.Expiration,expiration.ToString()),
-                new Claim(ClaimTypes.IsPersistent,request.Persist.ToString()),
-                new Claim(ClaimTypes.Email,ldapUser.EmailAddress),
-                new Claim(ClaimTypes.NameIdentifier,request.Username),
-                new Claim(ClaimTypes.Name, ldapUser.Name),
-                new Claim(ClaimTypes.Role, role.ToString()),
-                new Claim(ClaimTypes.Sid, ldapUser.ObjectSid)
+                Email = ldapUser.Email,
+                ObjectId = ldapUser.Id,
+                Expiration = expiration,
+                Persist = request.Persist,
+                Role = role,
+                Name = ldapUser.Name,
+                Username = request.Username
             };
-            var claimsId = new ClaimsIdentity(claims);
-            var certificate = _encryption.LoadCertificate(_config.Certificate.CertificateLocation, _config.Certificate.Password);
+            var userToken = await _tokenSvc.GenerateAuthenticationTokenAsync(tokenRequest);
 
-            //Make sure the incoming certificate matches what is configured.
-            if (certificate.Thumbprint.ToLowerInvariant() != _config.Certificate.Thumbprint.ToLowerInvariant())
-                throw new InvalidOperationException("Certificate used does not match the thumbprint configured. This could be a man-in-the-middle attack.");
-
-            var token = _encryption.GenerateJwt(claimsId, expiration, null, certificate);
-
-            var userToken = new UserToken
-            {
-                Active = true,
-                CreatedAt = DateTime.Now,
-                TokenExpiry = expiration,
-                TokenString = token
-            };
-            await _tokenSvc.SaveAsync(userToken);
-
-            result.LogonToken = token;
+            result.LogonToken = userToken.TokenString;
             return result;
         }
 
-        public async Task LogoutAsync(string username)
+        public async Task LogoutAsync(string username, string token)
         {
+            var userToken = await _tokenSvc.GetTokenByUserAndTokenAsync(username, token);
 
+            if (userToken != null)
+            {
+                userToken.Active = false;
+                userToken.UpdatedAt = DateTime.Now;
+
+                await _tokenSvc.SaveAsync(userToken);
+            }
         }
 
         //CN=SG_Unionized_Admin,CN=Users,DC=unionsquared,DC=lan
-        private RoleType GetRoleFromGroups(string[] userGroups)
+        private async Task<RoleType> GetRoleFromGroups(string[] userGroups)
         {
             if (userGroups.Length == 0)
                 return RoleType.Nobody;
@@ -98,10 +91,12 @@ namespace Unionized.Service
                 s = item.Substring(0, item.IndexOf(','));
                 s = s.Replace("CN=", string.Empty);
 
-                if (s == "SG_Unionized_Admin")
-                    return RoleType.Admin;
-                else if (s == "SG_Unionized_User")
-                    return RoleType.User;
+                var role = await _roleRepo.GetBySecurityGroup(s);
+
+                if (role != null)
+                {
+                    return role.Role;
+                }
             }
 
             return RoleType.Nobody;

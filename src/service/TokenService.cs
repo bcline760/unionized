@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Unionized.Contract;
@@ -9,15 +10,65 @@ using Unionized.Contract.Service;
 
 namespace Unionized.Service
 {
-    public class TokenService : UnionizedService<UserToken>, ITokenService
+    internal sealed class TokenService : UnionizedService<UserToken>, ITokenService
     {
-        public TokenService(ITokenRepository repository) : base(repository)
-        {
+        private IEncryptionService Encryption { get; }
 
-        }
-        public Task<UserToken> GeneratePersistentToken(TokenRequest request)
+        private UnionizedConfiguration Config { get; }
+
+        private ITokenRepository Repository { get; }
+
+        public TokenService(ITokenRepository repository, IEncryptionService encryption,
+            UnionizedConfiguration config) : base(repository)
         {
-            throw new NotImplementedException();
+            Encryption = encryption;
+            Config = config;
+            Repository = repository;
+        }
+
+        public async Task<UserToken> GenerateAuthenticationTokenAsync(TokenRequest request)
+        {
+            var certificate = Encryption.LoadCertificate(Config.Certificate.CertificateLocation, Config.Certificate.Password);
+
+            //Make sure the incoming certificate matches what is configured.
+            if (certificate.Thumbprint.ToLowerInvariant() != Config.Certificate.Thumbprint.ToLowerInvariant())
+                throw new InvalidOperationException("Certificate used does not match the thumbprint configured. This could be a man-in-the-middle attack.");
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Expiration,request.Expiration.ToString()),
+                new Claim(ClaimTypes.IsPersistent,request.Persist.ToString()),
+                new Claim(ClaimTypes.Role, request.Role.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, request.Username),
+                new Claim(ClaimTypes.Sid, request.ObjectId)
+            };
+
+            if (!string.IsNullOrEmpty(request.Email))
+                claims.Add(new Claim(ClaimTypes.Email, request.Email));
+            if (!string.IsNullOrEmpty(request.Name))
+                claims.Add(new Claim(ClaimTypes.Name, request.Name));
+
+            var claimsId = new ClaimsIdentity(claims);
+            var token = Encryption.GenerateJwt(claimsId, DateTime.MaxValue, null, certificate);
+
+            var userToken = new UserToken
+            {
+                CreatedAt = DateTime.Now,
+                TokenExpiry = request.Expiration,
+                TokenString = token
+            };
+
+            int recordsModified = await SaveAsync(userToken);
+
+            return userToken;
+        }
+
+        public async Task<UserToken> GetTokenByUserAndTokenAsync(string user, string token)
+        {
+            var userList = await Repository.GetByUserAsync(user);
+
+            var userToken = userList.FirstOrDefault(t => t.TokenString == token);
+            return userToken;
         }
     }
 }

@@ -14,6 +14,14 @@ namespace Unionized.Contract.Service
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<UserToken> GeneratePersistentToken(TokenRequest request);
+        Task<UserToken> GenerateAuthenticationTokenAsync(TokenRequest request);
+
+        /// <summary>
+        /// Get a token by the value and its user
+        /// </summary>
+        /// <param name="user">The user to look up</param>
+        /// <param name="token">The stored token to look up</param>
+        /// <returns>The user token matching the user and token text</returns>
+        Task<UserToken> GetTokenByUserAndTokenAsync(string user, string token);
     }
 }

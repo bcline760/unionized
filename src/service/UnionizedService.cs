@@ -20,7 +20,7 @@ namespace Unionized.Service
         }
         public async Task<int> SaveAsync(TEntity entity)
         {
-            if (entity.ID == Guid.Empty)
+            if (string.IsNullOrEmpty(entity.Slug))
                 return await _repo.CreateAsync(entity);
 
             return await _repo.UpdateAsync(entity);

@@ -17,10 +17,10 @@ namespace Unionized.Contract.Service
         Task<LogonResponse> AuthenticateAsync(LogonRequest request);
 
         /// <summary>
-        /// 
+        /// Log the user out of the system by disabling its authentication token
         /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        Task LogoutAsync(string username);
+        /// <param name="username">The authenticated user</param>
+        /// <param name="token">The token to eventually disable</param>
+        Task LogoutAsync(string username, string token);
     }
 }
