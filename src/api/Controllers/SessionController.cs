@@ -31,14 +31,34 @@ namespace Unionized.Api.Controllers
             if (request == null)
                 return BadRequest();
 
-            var logonResponse = await _session.AuthenticateAsync(request);
-            return Ok(logonResponse);
+            try
+            {
+                var logonResponse = await _session.AuthenticateAsync(request);
+                
+                return Ok(logonResponse);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log exception
+                return StatusCode(500, ex);
+            }
         }
 
-        [HttpGet,Route("logout")]
-        public async Task<IActionResult> LogoutAsync()
+        [HttpPost,Route("logout")]
+        public async Task<IActionResult> LogoutAsync(string username, string token)
         {
-            return Ok();
+            if (username == null)
+                return BadRequest();
+            try
+            {
+                await _session.LogoutAsync(username, token);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log exception
+                return StatusCode(500, ex);
+            }
         }
     }
 }

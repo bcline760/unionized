@@ -12,7 +12,7 @@ namespace Unionized.Contract
         /// The Prim
         /// </summary>
         [IgnoreDataMember]
-        public Guid ID { get; set; }
+        public int ID { get; set; }
 
         [DataMember]
         public string Slug { get; set; }

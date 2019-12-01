@@ -26,6 +26,18 @@ namespace Unionized.Service
             Repository = repository;
         }
 
+        public async Task InvalidateUserTokens(string username)
+        {
+            var userTokens = await Repository.GetByUserAsync(username);
+
+            var activeTokens = userTokens.Where(a => a.Active).ToList();
+            foreach (var token in activeTokens)
+            {
+                token.Active = false;
+                await SaveAsync(token);
+            }
+        }
+
         public async Task<UserToken> GenerateAuthenticationTokenAsync(TokenRequest request)
         {
             var certificate = Encryption.LoadCertificate(Config.Certificate.CertificateLocation, Config.Certificate.Password);
@@ -40,7 +52,8 @@ namespace Unionized.Service
                 new Claim(ClaimTypes.IsPersistent,request.Persist.ToString()),
                 new Claim(ClaimTypes.Role, request.Role.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, request.Username),
-                new Claim(ClaimTypes.Sid, request.ObjectId)
+                new Claim(ClaimTypes.Sid, request.ObjectId),
+                new Claim(ClaimTypes.Hash, Encryption.Hash(DateTime.Now.Ticks.ToString()))
             };
 
             if (!string.IsNullOrEmpty(request.Email))
@@ -49,13 +62,15 @@ namespace Unionized.Service
                 claims.Add(new Claim(ClaimTypes.Name, request.Name));
 
             var claimsId = new ClaimsIdentity(claims);
-            var token = Encryption.GenerateJwt(claimsId, DateTime.MaxValue, null, certificate);
+            var token = Encryption.GenerateJwt(claimsId, request.Expiration, null, certificate);
 
             var userToken = new UserToken
             {
                 CreatedAt = DateTime.Now,
                 TokenExpiry = request.Expiration,
-                TokenString = token
+                TokenString = token,
+                GeneratedBy = request.Username,
+                Active = true
             };
 
             int recordsModified = await SaveAsync(userToken);

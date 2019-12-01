@@ -13,5 +13,15 @@ namespace Unionized.Contract
 
         [DataMember]
         public DateTime TokenExpiry { get; set; }
+
+        [DataMember]
+        public string GeneratedBy { get; set; }
+
+        [IgnoreDataMember]
+        public override string[] SlugProperties => new string[]
+        {
+            GeneratedBy,
+            Guid.NewGuid().ToString().FirstEight()
+        };
     }
 }

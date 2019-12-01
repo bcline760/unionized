@@ -10,6 +10,13 @@ namespace Unionized.Contract.Service
     public interface ITokenService : IUnionizedService<UserToken>
     {
         /// <summary>
+        /// Invalidates all user token
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task InvalidateUserTokens(string username);
+
+        /// <summary>
         /// Generate a persistent authentication token. This is mainly used for automated operations
         /// </summary>
         /// <param name="request"></param>

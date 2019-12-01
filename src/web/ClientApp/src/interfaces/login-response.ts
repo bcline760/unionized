@@ -1,4 +1,4 @@
 export interface LoginResponse {
-    LoginToken:string;
-    Status:number;
+    logonToken:string;
+    status:number;
 }

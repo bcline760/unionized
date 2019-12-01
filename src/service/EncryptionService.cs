@@ -41,6 +41,27 @@ namespace Unionized.Service
             return hashedPwd;
         }
 
+        public string Hash(string content)
+        {
+            if (content == null)
+                throw new ArgumentNullException(nameof(content));
+
+            byte[] buffer = Encoding.Default.GetBytes(content);
+            byte[] hashedBuffer = null;
+            using (SHA256 s256 = SHA256.Create())
+            {
+                hashedBuffer = s256.ComputeHash(buffer);
+            }
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < hashedBuffer.Length; i++)
+            {
+                sb.Append($"{hashedBuffer[i]:X2}");
+            }
+
+            return sb.ToString();
+        }
+
         public string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, string key = null, X509Certificate2 signingCertificate = null)
         {
             SigningCredentials signingCredentials = null;
@@ -70,6 +91,14 @@ namespace Unionized.Service
             string token = jwtHandler.WriteToken(t);
 
             return token;
+        }
+
+        public void DecodeJwt(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+
+            
         }
 
         public X509Certificate2 LoadCertificate(string location, string certificatePassword = null)

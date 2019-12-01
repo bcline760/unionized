@@ -47,6 +47,7 @@ namespace Unionized.Service
             if (ldapUser == null)
                 throw new InvalidOperationException("Missing AD user");
 
+            await _tokenSvc.InvalidateUserTokens(request.Username);
             DateTime expiration = request.Persist ? DateTime.MaxValue : DateTime.Now.AddHours(6);
             RoleType role = await GetRoleFromGroups(ldapUser.MemberOf);
 

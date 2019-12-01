@@ -17,7 +17,7 @@ namespace Unionized.Model.Database
         public DateTime CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime? UpdateAt { get; set; }
-        [Column("active"), Required]
+        [Column("active", TypeName = "bit"), Required]
         public bool Active { get; set; }
     }
 }

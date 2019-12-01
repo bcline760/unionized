@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Unionized.Service;
 using Unionized.Model.Database;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 
 namespace Unionized.Api
 {
@@ -59,6 +62,10 @@ namespace Unionized.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var config = Configuration.Get<UnionizedConfiguration>();
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+
+            string path = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
+            config.Certificate.CertificateLocation = path;
             builder.RegisterInstance<UnionizedConfiguration>(config).SingleInstance();
             RegisterModules.Register(builder, config);
         }
@@ -68,7 +75,7 @@ namespace Unionized.Api
         {
             // If, for some reason, you need a reference to the built container, you
             // can use the convenience extension method GetAutofacRoot.
-            this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+            AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
             if (IsDevelopment)
             {
@@ -77,9 +84,8 @@ namespace Unionized.Api
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

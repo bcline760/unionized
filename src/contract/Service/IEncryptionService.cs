@@ -38,6 +38,13 @@ namespace Unionized.Contract.Service
         byte[] GeneratePasswordHash(string plainText);
 
         /// <summary>
+        /// Hash given content using SHA-256 algorithm
+        /// </summary>
+        /// <param name="content">The content to hash</param>
+        /// <returns>The SHA-256 hash of the content</returns>
+        string Hash(string content);
+
+        /// <summary>
         /// Load a certificate from the file system
         /// </summary>
         /// <param name="location">The location of the certificate on the filesystem</param>

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Unionized.Model.Database
 {
+    [Table("role")]
     public class AppRoleModel
     {
         [Key]
