@@ -1,11 +1,8 @@
 ﻿using System;
 
 using Autofac;
-using Autofac.Core;
-
+using Unionized.Model.API;
 using Unionized.Model.Database;
-using Unionized.Model.OpenHab;
-using Unionized.Service;
 
 namespace Unionized.Service
 {
@@ -15,6 +12,7 @@ namespace Unionized.Service
         {
             builder.RegisterModule(new CoreModule());
             builder.RegisterModule(new DatabaseModule());
+            builder.RegisterModule(new ApiModule());
             builder.RegisterModule(new ServiceModule());
         }
     }

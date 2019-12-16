@@ -4,21 +4,24 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { tap, catchError, shareReplay } from 'rxjs/operators';
+import { environment } from '../environments/environment';
+import { HttpService } from './http.service';
+import { LoadingService } from './loading.service';
 
 import { LoginRequest } from 'src/interfaces/login-request';
 import { LoginResponse } from 'src/interfaces/login-response';
-import { environment } from '../environments/environment';
-import { HttpService } from './http.service';
-
+import { UnionizedService } from './unionized.service';
 
 @Injectable()
-export class SessionService {
+export class SessionService extends UnionizedService {
     private apiController: string = "session";
 
     constructor(
-        public http: HttpService,
+        protected http: HttpService,
         @Inject(LOCAL_STORAGE) public storage: StorageService,
-        public jwtService: JwtHelperService) {
+        protected loadingSvc:LoadingService,
+        private jwtService: JwtHelperService) {
+        super(http, loadingSvc);
     }
 
     authenticateAsync(username: string, password: string, persist: boolean): Observable<LoginResponse> {
@@ -30,8 +33,10 @@ export class SessionService {
         };
 
         const url: string = `${environment.apiUrl}/${this.apiController}/login`;
+        this.loadingSvc.show();
         let response: Observable<LoginResponse> = this.http.send<LoginResponse, LoginRequest>(url, request, "POST").pipe(tap(res => {
             if (res.status == 0) {
+                this.loadingSvc.hide();
                 this.storage.set(environment.tokenStorageKey, res.logonToken);
             }
         }),
@@ -64,7 +69,6 @@ export class SessionService {
             return false;
         }
 
-        //const expiryDate: Date = this.jwtService.getTokenExpirationDate(authToken);
         const isExpired: boolean = this.jwtService.isTokenExpired(authToken);
         if (isExpired) {
             this.storage.set(environment.tokenStorageKey, '');
@@ -77,20 +81,4 @@ export class SessionService {
         //}
         return true;
     }
-
-    protected handleError(error: HttpErrorResponse) {
-        if (error.error instanceof ErrorEvent) {
-            // A client-side or network error occurred. Handle it accordingly.
-            console.error('An error occurred:', error.error.message);
-        } else {
-            // The backend returned an unsuccessful response code.
-            // The response body may contain clues as to what went wrong,
-            console.error(
-                `Backend returned code ${error.status}, ` +
-                `body was: ${error.error}`);
-        }
-        // return an observable with a user-facing error message
-        return throwError(
-            'Something bad happened; please try again later.');
-    };
 }

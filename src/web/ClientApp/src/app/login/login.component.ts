@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
             this.session.authenticateAsync(this.model.username, this.model.password, this.model.remember).subscribe(s => {
                 if (s.status == 0) {
                     if (this.returnUrl == null) {
-                        this.router.navigate(['home']);
+                        this.router.navigate(['']);
                     } else {
                         this.router.navigate([this.returnUrl]);
                     }

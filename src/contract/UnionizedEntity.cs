@@ -4,8 +4,7 @@ using System.Runtime.Serialization;
 
 namespace Unionized.Contract
 {
-    [KnownType(typeof(UserToken)),
-        KnownType(typeof(NetworkLog))]
+    [KnownType(typeof(UserToken)), KnownType(typeof(MonitoredServer)), KnownType(typeof(NetworkLog))]
     public abstract class UnionizedEntity : ISluggable
     {
         /// <summary>

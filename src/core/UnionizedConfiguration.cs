@@ -10,15 +10,17 @@ namespace Unionized
 
         public string EncryptionKey { get; set; }
 
-        //public Dictionary<string,string> SecurityGroups { get; set; }
-
         public string ConnectionString { get; set; }
+
+        public bool IsDevelopment { get; set; }
+
+        public CertificateSettings Certificate { get; set; }
 
         public LdapSettings LdapSettings { get; set; }
 
         public ServiceAccount ServiceAccount { get; set; }
 
-        public CertificateSettings Certificate { get; set; }
+        public ApiEndpoint Weather { get; set; }
     }
 
     public class LdapSettings
@@ -50,5 +52,12 @@ namespace Unionized
         public string CertificateLocation { get; set; }
 
         public string Password { get; set; }
+    }
+
+    public class ApiEndpoint
+    {
+        public string Endpoint { get; set; }
+
+        public string ApiKey { get; set; }
     }
 }

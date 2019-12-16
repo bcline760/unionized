@@ -15,13 +15,19 @@ import { AuthGuardService } from '../service/auth-guard.service';
 import { AppComponent } from './app.component';
 import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../environments/environment';
+import { LoginComponent } from './login/login.component';
+import { SiteLayoutComponent } from './_layout/site-layout/site-layout.component';
+import { LoadingOverlayComponent } from './loading-overlay/loading-overlay.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 export function tokenGetter() {
     return localStorage.getItem(environment.tokenStorageKey);
 }
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        SiteLayoutComponent,
+        LoadingOverlayComponent
     ],
     imports: [
         CommonModule,
@@ -35,12 +41,15 @@ export function tokenGetter() {
             }
         }),
         StorageServiceModule,
+        OverlayModule,
         AppRoutingModule,
         LoginModule,
         HomeModule,
         NetlogModule
     ],
-    providers: [HttpService, SessionService, AuthGuardService, JwtHelperService],
+    entryComponents: [LoadingOverlayComponent],
+    providers: [HttpService, SessionService,
+        AuthGuardService, JwtHelperService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -38,3 +38,13 @@ CREATE TABLE IF NOT EXISTS `unionized`.`role` (
     `ad_group` VARCHAR(32) NOT NULL,
     `role` VARCHAR(32) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS `unionized`.`monitored_servers` (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(32) NOT NULL,
+    hostname VARCHAR(32) NULL,
+    ip_address VARCHAR(20),
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NULL,
+    `active` BIT(1)
+)

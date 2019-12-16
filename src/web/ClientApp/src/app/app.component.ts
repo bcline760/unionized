@@ -8,12 +8,13 @@ import { SessionService } from '../service/session.service';
 })
 export class AppComponent implements OnInit {
     title = 'Unionized!';
+
+    public authenticated: boolean = false;
     
     constructor(public session: SessionService) {
 
     }
 
     ngOnInit(): void {
-        
     }
 }
