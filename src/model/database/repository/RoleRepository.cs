@@ -22,7 +22,7 @@ namespace Unionized.Model.Database.Repository
         {
             Context = context;
             Mapper = mapper;
-            Set = Context.Context.Set<AppRoleModel>();
+            Set = Context.DatabaseContext.Set<AppRoleModel>();
         }
 
         public async Task<AppRole> CreateRole(string securityGroup, RoleType role)
@@ -34,7 +34,7 @@ namespace Unionized.Model.Database.Repository
             };
 
             Set.Add(dbRole);
-            int recordsModified = await Context.Context.SaveChangesAsync();
+            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
 
             return Mapper.Map<AppRole>(dbRole);
         }

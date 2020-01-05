@@ -36,7 +36,7 @@ namespace Unionized.Model.Database
             {
                 var config = r.Resolve<UnionizedConfiguration>();
                 var optionsBuilder = new DbContextOptionsBuilder<UnionizedContext>();
-                optionsBuilder.UseMySQL(config.ConnectionString);
+                optionsBuilder.UseMySql(config.ConnectionString);
 
                 return new UnionizedContext(optionsBuilder.Options);
             }).As<IUnionizedContext>().SingleInstance();

@@ -31,7 +31,7 @@ namespace Unionized.Model.Database.Repository
         protected UnionizedRepository(IUnionizedContext context, IMapper mapper)
         {
             Context = context;
-            Set = Context.Context.Set<TModel>();
+            Set = Context.DatabaseContext.Set<TModel>();
             Mapper = mapper;
         }
 
@@ -45,7 +45,7 @@ namespace Unionized.Model.Database.Repository
             var model = Mapper.Map<TModel>(entity);
             Set.Attach(model).State = EntityState.Added;
 
-            int recordsModified = await Context.Context.SaveChangesAsync();
+            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
             return recordsModified;
         }
 
@@ -58,7 +58,7 @@ namespace Unionized.Model.Database.Repository
                 model.Active = false;
                 model.UpdatedAt = DateTime.Now;
 
-                int recordsModified = await Context.Context.SaveChangesAsync();
+                int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
                 return recordsModified;
             }
 
@@ -89,7 +89,7 @@ namespace Unionized.Model.Database.Repository
             var model = Mapper.Map<TModel>(entity);
             Set.Attach(model).State = EntityState.Modified;
 
-            int recordsModified = await Context.Context.SaveChangesAsync();
+            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
             return recordsModified;
         }
     }

@@ -33,8 +33,7 @@ namespace Unionized.Service
             var activeTokens = userTokens.Where(a => a.Active).ToList();
             foreach (var token in activeTokens)
             {
-                token.Active = false;
-                await SaveAsync(token);
+                await Repository.DeleteAsync(token.Slug);
             }
         }
 

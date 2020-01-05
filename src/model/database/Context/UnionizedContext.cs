@@ -15,7 +15,7 @@ namespace Unionized.Model.Database.Context
 
         public virtual DbSet<UserTokenModel> UserTokens { get; set; }
 
-        public virtual DbContext Context => this;
+        public virtual DbContext DatabaseContext => this;
 
         public UnionizedContext(DbContextOptions<UnionizedContext> options) : base(options)
         {
