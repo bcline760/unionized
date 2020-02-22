@@ -21,5 +21,15 @@ namespace Unionized.Service
         {
             return await Repository.GetConditionsAsync(longitude, latitude);
         }
+
+        public async Task<WeatherConditions> GetWeatherAsync(string city, string countryCode = null)
+        {
+            return await Repository.GetConditionsAsync(city, countryCode);
+        }
+
+        public async Task<WeatherConditions> GetWeatherAsync(string country, int zip = 0)
+        {
+            return await Repository.GetConditionsAsync(country, zip);
+        }
     }
 }

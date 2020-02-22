@@ -13,7 +13,7 @@ using Unionized.Contract.Service;
 namespace Unionized.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class SessionController : UnionizedController
     {
         private ISessionService _session;

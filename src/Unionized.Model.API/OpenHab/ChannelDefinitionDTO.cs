@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Unionized.Model.OpenHab
+namespace Unionized.Model.API.OpenHab
 { 
     /// <summary>
     /// 
