@@ -15,8 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\contract\Unionized.Contract.csproj" />
     <ProjectReference Include="..\core\Unionized.csproj" />
+    <ProjectReference Include="..\model\api\Unionized.Model.API.csproj" />
     <ProjectReference Include="..\model\database\Unionized.Model.Database.csproj" />
-    <ProjectReference Include="..\Unionized.Model.API\Unionized.Model.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

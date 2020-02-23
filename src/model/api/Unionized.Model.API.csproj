@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\contract\Unionized.Contract.csproj" />
+    <ProjectReference Include="..\..\contract\Unionized.Contract.csproj" />
+    <ProjectReference Include="..\..\core\Unionized.csproj" />
   </ItemGroup>
 
 </Project>
