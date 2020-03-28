@@ -29,15 +29,15 @@ export class SessionService extends UnionizedService {
             Username: username,
             Password: password,
             Persist: persist,
-            SsoToken: null
+            SsoToken: ""
         };
 
         const url: string = `${environment.apiUrl}/${this.apiController}/login`;
         this.loadingSvc.show();
         let response: Observable<LoginResponse> = this.http.send<LoginResponse, LoginRequest>(url, request, "POST").pipe(tap(res => {
-            if (res.status == 0) {
+            if (res.Status == 0) {
                 this.loadingSvc.hide();
-                this.storage.set(environment.tokenStorageKey, res.logonToken);
+                this.storage.set(environment.tokenStorageKey, res.LoginToken);
             }
         }),
             catchError(this.handleError),

@@ -6,7 +6,7 @@ import { LoadingOverlayComponent } from '../app/loading-overlay/loading-overlay.
   providedIn: 'root'
 })
 export class LoadingService {
-    private overlayRef: OverlayRef = null;
+    private overlayRef: OverlayRef;
     constructor(private overlay: Overlay) { }
 
     public show(message = ''): void {

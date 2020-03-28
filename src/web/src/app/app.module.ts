@@ -5,12 +5,12 @@ import { CommonModule } from '@angular/common';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { AppRoutingModule } from './app-routing.module';
-import { NetlogModule } from './netlog/netlog.module';
+// import { NetlogModule } from './netlog/netlog.module';
 
-import { SessionService } from '../service/session.service';
-import { HttpService } from '../service/http.service';
+import { SessionService } from './session.service';
+import { HttpService } from './http.service';
 import { StorageServiceModule } from 'ngx-webstorage-service';
-import { AuthGuardService } from '../service/auth-guard.service';
+import { AuthGuardService } from './auth-guard.service';
 
 import { AppComponent } from './app.component';
 import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
@@ -44,8 +44,8 @@ export function tokenGetter() {
         OverlayModule,
         AppRoutingModule,
         LoginModule,
-        HomeModule,
-        NetlogModule
+        HomeModule
+        //NetlogModule
     ],
     entryComponents: [LoadingOverlayComponent],
     providers: [HttpService, SessionService,

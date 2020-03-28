@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginModel } from './login.model';
-import { SessionService } from 'src/service/session.service';
+import { SessionService } from '../session.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
-    protected model: LoginModel;
-    private hasFailed: boolean = false;
+    public model: LoginModel;
+    public hasFailed: boolean = false;
     private returnUrl: string;
 
     constructor(protected session: SessionService, protected router: Router, protected route: ActivatedRoute) {
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     onLogin(): void {
         try {
             this.session.authenticateAsync(this.model.username, this.model.password, this.model.remember).subscribe(s => {
-                if (s.status == 0) {
+                if (s.Status == 0) {
                     if (this.returnUrl == null) {
                         this.router.navigate(['']);
                     } else {

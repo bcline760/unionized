@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { WeatherService } from '../../service/weather.service';
+import { WeatherService } from '../weather.service'
 import { HomeModel } from './home-model';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    private model: HomeModel;
+    public model: HomeModel;
     constructor(public weather: WeatherService) {
         this.model = new HomeModel();
     }
