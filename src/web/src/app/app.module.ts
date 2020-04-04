@@ -37,7 +37,7 @@ export function tokenGetter() {
             config: {
                 tokenGetter: tokenGetter,
                 throwNoTokenError: false,
-                whitelistedDomains: ['https://localhost:44390/']
+                whitelistedDomains: [`https://${environment.domain}/`]
             }
         }),
         StorageServiceModule,

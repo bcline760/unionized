@@ -15,4 +15,7 @@
     <ProjectReference Include="..\..\core\Unionized.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HomeAssistant\" />
+  </ItemGroup>
 </Project>

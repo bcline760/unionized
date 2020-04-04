@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: "https://localhost:44359/api",
+  domain: "localhost:44359",
   tokenStorageKey: "API_TOKEN"
 };
 
