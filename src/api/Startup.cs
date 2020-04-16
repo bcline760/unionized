@@ -1,13 +1,18 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Unionized.Service;
 
 namespace Unionized.Api
@@ -38,11 +43,40 @@ namespace Unionized.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Don't have a reference to the DI framework...yet or I don't know how to get it...yet
+            var config = Configuration.Get<UnionizedConfiguration>();
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+            var certificatePath = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
+
             services.AddControllers();
             services.AddOptions();
             services.AddCors(o =>
             {
                 o.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateTokenReplay = true,
+                    IssuerSigningKey = new X509SecurityKey(new X509Certificate2(certificatePath, config.Certificate.Password)),
+                    ValidateIssuer = !IsDevelopment,
+                    ValidateAudience = !IsDevelopment,
+                    TokenReplayValidator = (expirationTime, securityToken, validationParameters) =>
+                    {
+                        var handler = x.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
+                        var token = handler.ReadJwtToken(securityToken);
+                        return true;
+                    }
+                };
             });
         }
 
@@ -57,7 +91,7 @@ namespace Unionized.Api
 
             string path = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
             config.Certificate.CertificateLocation = path;
-            builder.RegisterInstance<UnionizedConfiguration>(config).SingleInstance();
+            builder.RegisterInstance(config).SingleInstance();
             RegisterModules.Register(builder, config);
         }
 
@@ -71,7 +105,7 @@ namespace Unionized.Api
             if (IsDevelopment)
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("CorsPolicy");
+                app.UseCors(x => x.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
             }
 
             app.UseHttpsRedirection();

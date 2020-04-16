@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { tap, catchError, shareReplay } from 'rxjs/operators';
-import { environment } from '../environments/environment';
-import { Weather, WeatherConditions, CloudConditions } from './weather';
+import { environment } from '../../environments/environment';
+import { Weather, WeatherConditions, CloudConditions } from '../weather';
 import { Observable } from 'rxjs';
 import { UnionizedService } from './unionized.service';
 import { LoadingService } from './loading.service';

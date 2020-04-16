@@ -4,12 +4,12 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { tap, catchError, shareReplay } from 'rxjs/operators';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
 import { LoadingService } from './loading.service';
 
-import { LoginRequest } from './login-request';
-import { LoginResponse } from './login-response';
+import { LoginRequest } from '../model/login-request';
+import { LoginResponse } from '../model/login-response';
 import { UnionizedService } from './unionized.service';
 
 @Injectable()
@@ -35,9 +35,9 @@ export class SessionService extends UnionizedService {
         const url: string = `${environment.apiUrl}/${this.apiController}/login`;
         this.loadingSvc.show();
         let response: Observable<LoginResponse> = this.http.send<LoginResponse, LoginRequest>(url, request, "POST").pipe(tap(res => {
-            if (res.Status == 0) {
+            if (res.status == 0) {
                 this.loadingSvc.hide();
-                this.storage.set(environment.tokenStorageKey, res.LoginToken);
+                this.storage.set(environment.tokenStorageKey, res.loginToken);
             }
         }),
             catchError(this.handleError),

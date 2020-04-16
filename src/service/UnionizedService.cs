@@ -11,29 +11,31 @@ namespace Unionized.Service
     public abstract class UnionizedService<TEntity> : IUnionizedService<TEntity>
         where TEntity : UnionizedEntity
     {
-
-        protected IUnionizedRepository<TEntity> _repo;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected virtual IUnionizedRepository<TEntity> Repository { get; set; }
 
         protected UnionizedService(IUnionizedRepository<TEntity> repo)
         {
-            _repo = repo;
+            Repository = repo;
         }
         public async Task<int> SaveAsync(TEntity entity)
         {
             if (string.IsNullOrEmpty(entity.Slug))
-                return await _repo.CreateAsync(entity);
+                return await Repository.CreateAsync(entity);
 
-            return await _repo.UpdateAsync(entity);
+            return await Repository.UpdateAsync(entity);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await _repo.GetAllAsync();
+            return await Repository.GetAllAsync();
         }
 
         public async Task<TEntity> GetAsync(string slug)
         {
-            return await _repo.GetAsync(slug);
+            return await Repository.GetAsync(slug);
         }
     }
 }

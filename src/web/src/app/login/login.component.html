@@ -2,7 +2,7 @@
   <div class="container">
     <div class="middle">
       <div id="login">
-        <form #loginForm="ngForm">
+        <form #loginForm="ngForm" (ngSubmit)="onLogin()">
           <fieldset class="clearfix">
             <p><span class="fa fa-user"></span><input type="text" Placeholder="Username" required
                 [(ngModel)]="model.username" #username="ngModel" name="username"></p>

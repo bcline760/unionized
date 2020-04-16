@@ -1,4 +1,4 @@
-import { SessionService } from "../session.service";
+import { SessionService } from "../service/session.service";
 
 export class LoginModel {
     username:string;

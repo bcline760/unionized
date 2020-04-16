@@ -14,10 +14,10 @@ namespace Unionized.Model.Database
         [Column("rule"), Required]
         public string Rule { get; set; }
 
-        [Column("iface_in"), Required]
+        [Column("iface_in")]
         public string InterfaceIn { get; set; }
 
-        [Column("iface_out"), Required]
+        [Column("iface_out")]
         public string InterfaceOut { get; set; }
 
         [Column("mac_address"), Required]
@@ -47,7 +47,7 @@ namespace Unionized.Model.Database
         [Column("tcp_action")]
         public string TcpAction { get; set; }
 
-        [Column("icmp_seq")]
+        [Column("icmp_sequence")]
         public int? IcmpSequence { get; set; }
     }
 }

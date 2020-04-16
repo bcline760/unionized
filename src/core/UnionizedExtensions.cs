@@ -1,12 +1,27 @@
 ﻿using System;
 using System.Linq;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 
 namespace Unionized
 {
     public static class UnionizedExtensions
     {
+        public static readonly JsonSerializerSettings JsonSerializeSettings = new JsonSerializerSettings
+        {
+            MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
+            DateParseHandling = DateParseHandling.None,
+            Converters =
+            {
+                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
+            },
+        };
+
         /// <summary>
         /// Compares two byte arrays to see if they are equal
         /// </summary>
@@ -62,5 +77,21 @@ namespace Unionized
 
             return prop;
         }
+
+        /// <summary>
+        /// Serialize a list object to JSON
+        /// </summary>
+        /// <typeparam name="T">The type of object to serialize</typeparam>
+        /// <param name="self">The </param>
+        /// <returns>A JSON string representing the serialized objects</returns>
+        public static string ToJson<T>(this List<T> self) => JsonConvert.SerializeObject(self, JsonSerializeSettings);
+
+        /// <summary>
+        /// Serialize a JSON object to string
+        /// </summary>
+        /// <typeparam name="T">The type of object to serialize</typeparam>
+        /// <param name="self"></param>
+        /// <returns>A JSON string representing the serialized object</returns>
+        public static string ToJson<T>(this T self) => JsonConvert.SerializeObject(self, JsonSerializeSettings);
     }
 }

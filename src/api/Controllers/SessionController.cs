@@ -13,7 +13,6 @@ using Unionized.Contract.Service;
 namespace Unionized.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
     public class SessionController : UnionizedController
     {
         private ISessionService _session;
@@ -40,7 +39,7 @@ namespace Unionized.Api.Controllers
             catch (Exception ex)
             {
                 //TODO: Log exception
-                return StatusCode(500, ex);
+                return StatusCode(500, null);
             }
         }
 

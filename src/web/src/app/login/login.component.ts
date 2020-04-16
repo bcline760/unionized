@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginModel } from './login.model';
-import { SessionService } from '../session.service';
+import { SessionService } from '../service/session.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     onLogin(): void {
         try {
             this.session.authenticateAsync(this.model.username, this.model.password, this.model.remember).subscribe(s => {
-                if (s.Status == 0) {
+                if (s.status == 0) {
                     if (this.returnUrl == null) {
                         this.router.navigate(['']);
                     } else {

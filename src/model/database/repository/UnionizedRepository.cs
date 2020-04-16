@@ -40,8 +40,9 @@ namespace Unionized.Model.Database.Repository
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            entity.Slugify();
-            string slug = entity.Slug;
+            if (string.IsNullOrEmpty(entity.Slug))
+                entity.Slugify();
+            
             var model = Mapper.Map<TModel>(entity);
             Set.Attach(model).State = EntityState.Added;
 

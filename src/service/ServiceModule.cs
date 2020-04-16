@@ -13,6 +13,7 @@ namespace Unionized.Service
             builder.RegisterType<SessionService>().As<ISessionService>().InstancePerLifetimeScope();
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<NetworkLogService>().As<INetworkLogService>().InstancePerLifetimeScope();
             base.Load(builder);
         }
     }

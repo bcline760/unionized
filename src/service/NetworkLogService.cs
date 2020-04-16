@@ -13,7 +13,48 @@ namespace Unionized.Service
     {
         public NetworkLogService(INetworkLogRepository repository) : base(repository)
         {
-            _repo = repository;
+            Repository = repository;
+        }
+
+        public async Task<List<NetworkLog>> GetLogsByDate(DateTime? after, DateTime? before)
+        {
+            var netRepo = (INetworkLogRepository)Repository;
+
+            return await netRepo.GetByDateRangeAsync(after, before);
+        }
+
+        public async Task<List<NetworkLog>> GetLogsByPort(int? sourcePort, int? destinationPort)
+        {
+            var netRepo = (INetworkLogRepository)Repository;
+
+            List<NetworkLog> logs = new List<NetworkLog>();
+
+            if (sourcePort.HasValue)
+                logs.AddRange(await netRepo.GetBySourcePortAsync(sourcePort.Value));
+            if (destinationPort.HasValue)
+            {
+                logs.AddRange(await netRepo.GetByDestinationPortAsync(destinationPort.Value));
+            }
+
+            return logs;
+        }
+
+        public async Task<List<NetworkLog>> GetLogsByAddress(string srcAddr, string destAddr)
+        {
+            var netRepo = (INetworkLogRepository)Repository;
+
+            List<NetworkLog> logs = new List<NetworkLog>();
+
+            if (!string.IsNullOrEmpty(srcAddr))
+            {
+                logs.AddRange(await netRepo.GetBySourceAddressAsync(srcAddr));
+            }
+            if (!string.IsNullOrEmpty(destAddr))
+            {
+                logs.AddRange(await netRepo.GetByDestinationAddressAsync(destAddr));
+            }
+
+            return logs;
         }
 
         public async Task<int> SaveLog(string logText)
@@ -61,7 +102,7 @@ namespace Unionized.Service
             if (dict.ContainsKey("ICMP"))
                 netLog.IcmpSequence = int.Parse(dict["ICMP"]);
 
-            int recordsModified = await _repo.CreateAsync(netLog);
+            int recordsModified = await Repository.CreateAsync(netLog);
 
             return recordsModified;
         }
