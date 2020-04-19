@@ -15,6 +15,8 @@ namespace Unionized.Model.Database.Context
 
         public virtual DbSet<UserTokenModel> UserTokens { get; set; }
 
+        public virtual DbSet<MonitoredServersModel> MonitoredServers { get; set; }
+
         public virtual DbContext DatabaseContext => this;
 
         public UnionizedContext(DbContextOptions<UnionizedContext> options) : base(options)
@@ -31,6 +33,7 @@ namespace Unionized.Model.Database.Context
             modelBuilder.Entity<NetworkLogModel>();
             modelBuilder.Entity<UserTokenModel>();
             modelBuilder.Entity<AppRoleModel>();
+            modelBuilder.Entity<MonitoredServersModel>();
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))

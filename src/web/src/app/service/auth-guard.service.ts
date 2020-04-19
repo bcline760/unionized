@@ -14,10 +14,10 @@ import { SessionService } from './session.service';
 export class AuthGuardService implements CanActivate {
     constructor(public session:SessionService, public router:Router) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         const expectedRole = route.data.expectedRole;
 
-        const canNavigate: boolean = this.session.validateToken(expectedRole);
+        const canNavigate: boolean = await this.session.validateTokenAsync(expectedRole)
         if (canNavigate)
             return true;
         else {

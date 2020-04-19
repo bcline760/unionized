@@ -22,5 +22,13 @@ namespace Unionized.Contract.Service
         /// <param name="username">The authenticated user</param>
         /// <param name="token">The token to eventually disable</param>
         Task LogoutAsync(string username, string token);
+
+        /// <summary>
+        /// Validates a user's token. Destroys invalid tokens
+        /// </summary>
+        /// <param name="token">The token text</param>
+        /// <param name="username">The user holding the token</param>
+        /// <returns>Boolean value indicating validity of token</returns>
+        Task<bool> ValidateTokenAsync(string token, string username);
     }
 }

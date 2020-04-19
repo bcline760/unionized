@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
-import { tap, catchError, shareReplay } from 'rxjs/operators';
+import { Injectable, Inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Weather, WeatherConditions, CloudConditions } from '../weather';
-import { Observable } from 'rxjs';
 import { UnionizedService } from './unionized.service';
-import { LoadingService } from './loading.service';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { HttpService } from './http.service';
 
 @Injectable({
@@ -12,17 +10,16 @@ import { HttpService } from './http.service';
 })
 export class WeatherService extends UnionizedService {
     private apiController: string = "session";
-    constructor(protected client: HttpService, protected loadingSvc: LoadingService) {
-        super(client, loadingSvc);
+    constructor(
+        protected client: HttpService,
+        @Inject(LOCAL_STORAGE) protected storage: StorageService) {
+        super(client, storage);
     }
 
-    public getCurrentConditions(zipCode: number): Observable<Weather> {
+    public async getCurrentConditions(zipCode: number): Promise<Weather> {
         //const url: string = `${this.apiUrl}&zip=${zipCode},us`;
         const url: string = `${environment.apiUrl}/${this.apiController}`;
-
-        const result:Observable<Weather> = this.http.get<Weather>(url).pipe(
-            catchError(this.handleError)
-        );
+        const result = await this.http.getAsync<Weather>(url,this.authenticationToken);
 
         return result;
     }

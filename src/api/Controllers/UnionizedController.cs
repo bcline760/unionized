@@ -50,7 +50,7 @@ namespace Unionized.Api.Controllers
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 apiResponse.Success = false;
                 apiResponse.Message = $"Failed to execute service operation {svcFunction}.";

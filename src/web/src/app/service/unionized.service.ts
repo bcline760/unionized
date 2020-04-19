@@ -1,15 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpService } from './http.service';
-import { LoadingService } from './loading.service';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
+import { environment } from '../../environments/environment';
 
 export abstract class UnionizedService {
-
-    constructor(protected http:HttpService, protected loadingSvc:LoadingService) { }
+    protected authenticationToken: string;
+    constructor(protected http: HttpService, @Inject(LOCAL_STORAGE) protected storage: StorageService) {
+        const authToken: string = this.storage.get(environment.tokenStorageKey);
+        if (authToken != undefined) {
+            this.authenticationToken = authToken;
+        }
+    }
 
     protected handleError(error: HttpErrorResponse) {
-        this.loadingSvc.hide();
         if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
             console.error('An error occurred:', error.error.message);

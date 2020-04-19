@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 
 using Autofac;
@@ -55,6 +56,7 @@ namespace Unionized.Api
                 o.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
+            
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,14 +71,12 @@ namespace Unionized.Api
                     ValidateTokenReplay = true,
                     IssuerSigningKey = new X509SecurityKey(new X509Certificate2(certificatePath, config.Certificate.Password)),
                     ValidateIssuer = !IsDevelopment,
-                    ValidateAudience = !IsDevelopment,
-                    TokenReplayValidator = (expirationTime, securityToken, validationParameters) =>
-                    {
-                        var handler = x.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
-                        var token = handler.ReadJwtToken(securityToken);
-                        return true;
-                    }
+                    ValidateAudience = !IsDevelopment
                 };
+            });
+            services.AddAuthorization(o =>
+            {
+                o.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
             });
         }
 

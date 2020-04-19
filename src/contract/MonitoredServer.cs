@@ -13,5 +13,8 @@ namespace Unionized.Contract
 
         [DataMember]
         public string IpAddress { get; set; }
+
+        [DataMember]
+        public bool Online { get; set; }
     }
 }

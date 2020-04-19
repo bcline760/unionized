@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from '../service/weather.service'
 import { HomeModel } from './home-model';
+import { LoadingService } from '../service/loading.service';
 
 @Component({
     selector: 'app-home',
@@ -9,11 +10,15 @@ import { HomeModel } from './home-model';
 })
 export class HomeComponent implements OnInit {
     public model: HomeModel;
-    constructor(public weather: WeatherService) {
+    constructor(
+        public weather: WeatherService,
+        protected loadingSvc:LoadingService) {
         this.model = new HomeModel();
     }
 
     ngOnInit() {
-        this.model.weather = this.weather.getCurrentConditions(92101);
+        this.loadingSvc.show();
+        // this.model.weather = this.weather.getCurrentConditions(92101);
+        this.loadingSvc.hide();
     }
 }

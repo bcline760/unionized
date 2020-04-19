@@ -1,4 +1,4 @@
 export interface LoginResponse {
-    loginToken: string;
+    logonToken: string;
     status: number;
 }

@@ -24,7 +24,8 @@ namespace Unionized.Model.Database
                       cfg.CreateMap<AppRole, AppRoleModel>()
                         .ForMember(m => m.Role, o => o.MapFrom(n => n.Role.ToString()))
                         .ReverseMap()
-                        .ForMember(m => m.Role, o => o.MapFrom(n => (RoleType)Enum.Parse<RoleType>(n.Role)));
+                        .ForMember(m => m.Role, o => o.MapFrom(n => Enum.Parse<RoleType>(n.Role)));
+                      cfg.CreateMap<MonitoredServer, MonitoredServersModel>().ReverseMap();
                   });
 
                 var map = config.CreateMapper();
@@ -44,6 +45,7 @@ namespace Unionized.Model.Database
             builder.RegisterType<NetworkLogRepository>().As<INetworkLogRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().InstancePerLifetimeScope();
             builder.RegisterType<RoleRepository>().As<IRoleRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<MonitoredServersRepository>().As<IMonitorServersRepository>().InstancePerLifetimeScope();
 
             base.Load(builder);
         }

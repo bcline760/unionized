@@ -80,6 +80,20 @@ namespace Unionized.Service
             }
         }
 
+        public async Task<bool> ValidateTokenAsync(string token, string username)
+        {
+            var userToken = await _tokenSvc.GetTokenByUserAndTokenAsync(username, token);
+
+            bool validToken = userToken != null && userToken.Active && userToken.TokenExpiry >= DateTime.Now;
+
+            if (!validToken)
+            {
+                await _tokenSvc.InvalidateUserTokens(username);
+            }
+
+            return validToken;
+        }
+
         //CN=SG_Unionized_Admin,CN=Users,DC=unionsquared,DC=lan
         private async Task<RoleType> GetRoleFromGroups(string[] userGroups)
         {

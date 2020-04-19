@@ -1,12 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
-import { tap, catchError, shareReplay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
-import { LoadingService } from './loading.service';
 
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
@@ -19,12 +16,11 @@ export class SessionService extends UnionizedService {
     constructor(
         protected http: HttpService,
         @Inject(LOCAL_STORAGE) public storage: StorageService,
-        protected loadingSvc:LoadingService,
         private jwtService: JwtHelperService) {
-        super(http, loadingSvc);
+        super(http, storage);
     }
 
-    authenticateAsync(username: string, password: string, persist: boolean): Observable<LoginResponse> {
+    async authenticateAsync(username: string, password: string, persist: boolean) {
         let request: LoginRequest = {
             Username: username,
             Password: password,
@@ -33,20 +29,26 @@ export class SessionService extends UnionizedService {
         };
 
         const url: string = `${environment.apiUrl}/${this.apiController}/login`;
-        this.loadingSvc.show();
-        let response: Observable<LoginResponse> = this.http.send<LoginResponse, LoginRequest>(url, request, "POST").pipe(tap(res => {
-            if (res.status == 0) {
-                this.loadingSvc.hide();
-                this.storage.set(environment.tokenStorageKey, res.loginToken);
+        let response: LoginResponse = {
+            logonToken: '',
+            status: 1
+        };
+
+        try {
+            response = await this.http.sendAsync<LoginResponse, LoginRequest>(url, request, "POST");
+
+            if (response.status == 0) {
+                this.storage.set(environment.tokenStorageKey,response.logonToken);
             }
-        }),
-            catchError(this.handleError),
-            shareReplay(1)
-        );
+        } catch (e) {
+            console.log(e);
+            throwError('authenticateAsync');
+        }
+
         return response;
     }
 
-    logoutAsync(username:string): void {
+    async logoutAsync(username: string): Promise<any> {
         const url: string = `${environment.apiUrl}/${this.apiController}/logout`;
         const authToken: string = this.storage.get(environment.tokenStorageKey);
         const logoutRequest = {
@@ -54,31 +56,30 @@ export class SessionService extends UnionizedService {
             token: authToken
         };
 
-        this.http.send<any, any>(url, logoutRequest, "POST").pipe(tap(res => {
-            //Clear the token from the storage
-            this.storage.remove(environment.tokenStorageKey);
-        }),
-            catchError(this.handleError)
-        );
+        try {
+            const response = await this.http.sendAsync<any,any>(url,logoutRequest,"POST");
+
+            return response;
+        } catch (e) {
+            console.log(e);
+            throwError('logoutAsync');
+        }
     }
 
-    validateToken(expectedRole: string): boolean {
-        const authToken: string = this.storage.get(environment.tokenStorageKey);
+    async validateTokenAsync(expectedRole: string) {
+        let valid: boolean = true;
 
-        if (authToken === "undefined") {
-            return false;
+        try {
+            if (this.authenticationToken != undefined) {
+                const url: string = `${environment.apiUrl}/${this.apiController}/validate`;
+                await this.http.getAsync<boolean>(url, this.authenticationToken);
+            }
+        } catch (e) {
+            console.log(e);
+            //throwError('Error with validateTokenAsync');
+            valid = false;
         }
 
-        const isExpired: boolean = this.jwtService.isTokenExpired(authToken);
-        if (isExpired) {
-            this.storage.set(environment.tokenStorageKey, '');
-            return false;
-        }
-
-        //if (expectedRole == undefined) {
-        //    const tokenPayload = this.jwtService.decodeToken(authToken);
-        //    return expectedRole === tokenPayload.role;
-        //}
-        return true;
+        return valid;
     }
 }

@@ -14,6 +14,7 @@ namespace Unionized.Service
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
             builder.RegisterType<NetworkLogService>().As<INetworkLogService>().InstancePerLifetimeScope();
+            builder.RegisterType<MonitoredServerService>().As<IMonitoredServerService>().InstancePerLifetimeScope();
             base.Load(builder);
         }
     }

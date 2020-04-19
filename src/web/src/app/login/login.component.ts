@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { LoginModel } from './login.model';
 import { SessionService } from '../service/session.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { LoadingService } from '../service/loading.service';
+import { LoginResponse } from '../model/login-response';
 
 @Component({
     selector: 'app-login',
@@ -14,31 +16,35 @@ export class LoginComponent implements OnInit {
     public hasFailed: boolean = false;
     private returnUrl: string;
 
-    constructor(protected session: SessionService, protected router: Router, protected route: ActivatedRoute) {
+    constructor(
+        protected session: SessionService,
+        protected router: Router,
+        protected loading: LoadingService,
+        protected route: ActivatedRoute) {
         this.model = new LoginModel(session);
     }
 
-    ngOnInit() {
+    async ngOnInit(): Promise<void> {
         this.route.params.pipe()
     }
 
-    onLogin(): void {
+    async onLogin(): Promise<void> {
+        const returnUrl: string = this.returnUrl == null ? '' : this.returnUrl;
+
         try {
-            this.session.authenticateAsync(this.model.username, this.model.password, this.model.remember).subscribe(s => {
-                if (s.status == 0) {
-                    if (this.returnUrl == null) {
-                        this.router.navigate(['']);
-                    } else {
-                        this.router.navigate([this.returnUrl]);
-                    }
-                } else {
-                    this.hasFailed = true;
-                }
-            }, e => {
-                    this.hasFailed = true;
-            });
-        }
-        catch (ex) {
+            this.loading.show();
+            const response: LoginResponse = await this.session.authenticateAsync(
+                this.model.username,
+                this.model.password,
+                this.model.remember
+            );
+            this.loading.hide();
+            if (response.status == 0) {
+                this.router.navigate([returnUrl]);
+            } else {
+                this.hasFailed = true;
+            }
+        } catch (e) {
             this.hasFailed = true;
         }
     }

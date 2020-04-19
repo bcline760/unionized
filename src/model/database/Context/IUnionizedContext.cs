@@ -7,5 +7,6 @@ namespace Unionized.Model.Database.Context
         DbContext DatabaseContext { get; }
         DbSet<NetworkLogModel> NetworkLogs { get; }
         DbSet<UserTokenModel> UserTokens { get; }
+        DbSet<MonitoredServersModel> MonitoredServers { get; }
     }
 }
