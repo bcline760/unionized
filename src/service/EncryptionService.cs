@@ -62,29 +62,18 @@ namespace Unionized.Service
             return sb.ToString();
         }
 
-        public string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, string key = null, X509Certificate2 signingCertificate = null)
+        public string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, X509Certificate2 signingCertificate, string issuer, string audience)
         {
-            SigningCredentials signingCredentials = null;
-            if (key != null)
-            {
-                signingCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.Default.GetBytes(key)),
-                        SecurityAlgorithms.HmacSha256Signature);
-            }
-            else if (signingCertificate != null)
-            {
-                signingCredentials = new X509SigningCredentials(signingCertificate);
-            }
-            else if (key != null && signingCertificate != null)
-                throw new ArgumentException("Cannot pass both a certificate and key");
-
+            SigningCredentials signingCredentials = new X509SigningCredentials(signingCertificate);
             var jwtHandler = new JwtSecurityTokenHandler();
             var tokenDesc = new SecurityTokenDescriptor
             {
                 SigningCredentials = signingCredentials,
                 Subject = claims,
                 NotBefore = DateTime.Now,
-                Expires = tokenExpiry
+                Expires = tokenExpiry,
+                Issuer = issuer,
+                Audience = audience
             };
 
             var t = jwtHandler.CreateToken(tokenDesc);
@@ -93,12 +82,38 @@ namespace Unionized.Service
             return token;
         }
 
-        public void DecodeJwt(string token)
+        public ClaimsPrincipal ValidateJwt(string token, X509Certificate2 signingCertificate, string issuer, string audience)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token);
+            SigningCredentials signingCredentials = new X509SigningCredentials(signingCertificate);
 
-            
+            var handler = new JwtSecurityTokenHandler();
+            var validationParams = new TokenValidationParameters
+            {
+                RequireSignedTokens = true,
+                RequireExpirationTime = true,
+                RequireAudience = true,
+                ValidateTokenReplay = true,
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidAudience = audience,
+                ValidIssuer = issuer,
+                IssuerSigningKey = signingCredentials.Key
+            };
+
+            try
+            {
+                SecurityToken validatedToken;
+                var claims = handler.ValidateToken(token, validationParams, out validatedToken);
+
+                return claims;
+            }
+            catch (SecurityTokenInvalidAudienceException invalidAudience) { } //Leaving these for future logging
+            catch (SecurityTokenInvalidIssuerException invalidIssuer) { }
+            catch (SecurityTokenInvalidSignatureException invalidSignature) { }
+            catch (SecurityTokenReplayDetectedException replayDetected) { }
+            catch (SecurityTokenExpiredException expiredToken) { }
+
+            return null;
         }
 
         public X509Certificate2 LoadCertificate(string location, string certificatePassword = null)

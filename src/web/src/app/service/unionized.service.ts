@@ -4,11 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { HttpService } from './http.service';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { environment } from '../../environments/environment';
+import { AuthToken } from '../model/auth-token.model';
 
 export abstract class UnionizedService {
-    protected authenticationToken: string;
+    protected authenticationToken: AuthToken;
     constructor(protected http: HttpService, @Inject(LOCAL_STORAGE) protected storage: StorageService) {
-        const authToken: string = this.storage.get(environment.tokenStorageKey);
+        const authToken: AuthToken = this.storage.get(environment.tokenStorageKey);
+        
         if (authToken != undefined) {
             this.authenticationToken = authToken;
         }

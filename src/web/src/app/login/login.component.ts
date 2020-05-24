@@ -48,8 +48,4 @@ export class LoginComponent implements OnInit {
             this.hasFailed = true;
         }
     }
-
-    async signout(): Promise<void> {
-        
-    }
 }

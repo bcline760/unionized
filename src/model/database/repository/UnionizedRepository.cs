@@ -52,7 +52,7 @@ namespace Unionized.Model.Database.Repository
 
         public async Task<int> DeleteAsync(string slug)
         {
-            var model = await GetAsync(slug);
+            var model = await Set.FirstOrDefaultAsync(s => s.Slug == slug);
 
             if (model != null)
             {
@@ -82,16 +82,18 @@ namespace Unionized.Model.Database.Repository
             return null;
         }
 
-        public async Task<int> UpdateAsync(TEntity entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+        public abstract Task<int> UpdateAsync(TEntity entity);
+        //{
+        //    if (entity == null)
+        //        throw new ArgumentNullException(nameof(entity));
 
-            var model = Mapper.Map<TModel>(entity);
-            Set.Attach(model).State = EntityState.Modified;
+        //    var model = Mapper.Map<TModel>(entity);
+        //    var dbEntity = await Context.DatabaseContext.FindAsync<TModel>(model.ID);
+        //    Context.DatabaseContext.Entry(dbEntity).State = EntityState.Detached;
 
-            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
-            return recordsModified;
-        }
+        //    Set.Attach(model);
+        //    int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
+        //    return recordsModified;
+        //}
     }
 }

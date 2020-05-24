@@ -20,6 +20,12 @@ namespace Unionized.Service
         {
             Repository = repo;
         }
+
+        public async Task<int> DeleteAsync(string slug)
+        {
+            return await Repository.DeleteAsync(slug);
+        }
+
         public async Task<int> SaveAsync(TEntity entity)
         {
             if (string.IsNullOrEmpty(entity.Slug))

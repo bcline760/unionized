@@ -51,7 +51,6 @@ namespace Unionized.Service
                 new Claim(ClaimTypes.IsPersistent,request.Persist.ToString()),
                 new Claim(ClaimTypes.Role, request.Role.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, request.Username),
-                new Claim(ClaimTypes.Sid, request.ObjectId),
                 new Claim(ClaimTypes.Hash, Encryption.Hash(DateTime.Now.Ticks.ToString()))
             };
 
@@ -61,7 +60,13 @@ namespace Unionized.Service
                 claims.Add(new Claim(ClaimTypes.Name, request.Name));
 
             var claimsId = new ClaimsIdentity(claims);
-            var token = Encryption.GenerateJwt(claimsId, request.Expiration, null, certificate);
+            var token = Encryption.GenerateJwt(
+                claimsId,
+                request.Expiration,
+                certificate,
+                request.Issuer,
+                request.Audience
+            );
 
             var userToken = new UserToken
             {
@@ -83,6 +88,15 @@ namespace Unionized.Service
 
             var userToken = userList.FirstOrDefault(t => t.TokenString == token);
             return userToken;
+        }
+
+        public ClaimsPrincipal ValidateToken(string token, string audience, string issuer)
+        {
+            var certificate = Encryption.LoadCertificate(Config.Certificate.CertificateLocation, Config.Certificate.Password);
+
+            var principal = Encryption.ValidateJwt(token, certificate, issuer, audience);
+
+            return principal;
         }
     }
 }

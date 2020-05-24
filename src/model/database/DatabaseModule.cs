@@ -40,7 +40,7 @@ namespace Unionized.Model.Database
                 optionsBuilder.UseMySql(config.ConnectionString);
 
                 return new UnionizedContext(optionsBuilder.Options);
-            }).As<IUnionizedContext>().SingleInstance();
+            }).As<IUnionizedContext>().InstancePerLifetimeScope();
 
             builder.RegisterType<NetworkLogRepository>().As<INetworkLogRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().InstancePerLifetimeScope();

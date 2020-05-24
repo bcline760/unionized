@@ -8,6 +8,7 @@ import { HttpService } from './http.service';
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
 import { UnionizedService } from './unionized.service';
+import { AuthToken } from '../model/auth-token.model';
 
 @Injectable()
 export class SessionService extends UnionizedService {
@@ -38,7 +39,11 @@ export class SessionService extends UnionizedService {
             response = await this.http.sendAsync<LoginResponse, LoginRequest>(url, request, "POST");
 
             if (response.status == 0) {
-                this.storage.set(environment.tokenStorageKey,response.logonToken);
+                const token: AuthToken = {
+                    loginToken: response.logonToken,
+                    username: username
+                };
+                this.storage.set(environment.tokenStorageKey, token);
             }
         } catch (e) {
             console.log(e);
@@ -48,16 +53,21 @@ export class SessionService extends UnionizedService {
         return response;
     }
 
-    async logoutAsync(username: string): Promise<any> {
+    async logoutAsync(): Promise<any> {
+        const username: string = this.storage.get(environment.tokenStorageKey);
         const url: string = `${environment.apiUrl}/${this.apiController}/logout`;
-        const authToken: string = this.storage.get(environment.tokenStorageKey);
-        const logoutRequest = {
-            username: username,
-            token: authToken
-        };
+        const authToken: AuthToken = this.storage.get(environment.tokenStorageKey);
+
+        if (authToken === undefined || authToken === null)
+            return;
 
         try {
-            const response = await this.http.sendAsync<any,any>(url,logoutRequest,"POST");
+            const logoutRequest = {
+                username: authToken.username,
+                token: authToken.loginToken
+            };
+
+            const response = await this.http.sendAsync<any, any>(url, logoutRequest, "POST");
 
             return response;
         } catch (e) {
@@ -67,17 +77,18 @@ export class SessionService extends UnionizedService {
     }
 
     async validateTokenAsync(expectedRole: string) {
-        let valid: boolean = true;
+        let valid: boolean = false;
 
         try {
             if (this.authenticationToken != undefined) {
                 const url: string = `${environment.apiUrl}/${this.apiController}/validate`;
                 await this.http.getAsync<boolean>(url, this.authenticationToken);
+
+                valid = true;
             }
         } catch (e) {
             console.log(e);
             //throwError('Error with validateTokenAsync');
-            valid = false;
         }
 
         return valid;

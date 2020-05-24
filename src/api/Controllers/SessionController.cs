@@ -44,21 +44,27 @@ namespace Unionized.Api.Controllers
             }
         }
 
-        [HttpPost,Route("logout")]
-        public async Task<IActionResult> LogoutAsync(string username, string token)
+        [HttpGet,Route("logout")]
+        public async Task<IActionResult> LogoutAsync()
         {
-            if (username == null)
-                return BadRequest();
-            try
+            var claims = HttpContext.User;
+            var token = HttpContext.Request.Headers["Authorization"][0].Replace("Bearer ", string.Empty);
+
+            if (claims.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
             {
-                await _session.LogoutAsync(username, token);
-                return Ok();
+                var claim = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+                try
+                {
+                    await _session.LogoutAsync(claim.Value, token);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Log exception
+                    return StatusCode(500, ex);
+                }
             }
-            catch (Exception ex)
-            { 
-                //TODO: Log exception
-                return StatusCode(500, ex);
-            }
+            return BadRequest();
         }
 
         [HttpGet, Route("validate")]

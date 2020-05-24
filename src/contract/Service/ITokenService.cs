@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Unionized.Contract.Service
@@ -30,5 +31,14 @@ namespace Unionized.Contract.Service
         /// <param name="token">The stored token to look up</param>
         /// <returns>The user token matching the user and token text</returns>
         Task<UserToken> GetTokenByUserAndTokenAsync(string user, string token);
+
+        /// <summary>
+        /// Validate a JWT
+        /// </summary>
+        /// <param name="token">The signed JWT to validate</param>
+        /// <param name="audience">The audience of the JWT</param>
+        /// <param name="issuer">The issuer of the JWT</param>
+        /// <returns>The claims in the token or null if invalid token</returns>
+        ClaimsPrincipal ValidateToken(string token, string audience, string issuer);
     }
 }

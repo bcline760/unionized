@@ -1,6 +1,4 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 
@@ -14,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Unionized.Service;
 
 namespace Unionized.Api
@@ -49,7 +48,8 @@ namespace Unionized.Api
             var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
             var certificatePath = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddOptions();
             services.AddCors(o =>
             {

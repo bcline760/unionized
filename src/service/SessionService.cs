@@ -9,7 +9,7 @@ using Unionized.Contract.Repository;
 
 namespace Unionized.Service
 {
-    public class SessionService : ISessionService
+    internal class SessionService : ISessionService
     {
         private readonly ILdap _ldap = null;
         private readonly UnionizedConfiguration _config = null;
@@ -47,15 +47,18 @@ namespace Unionized.Service
             if (ldapUser == null)
                 throw new InvalidOperationException("Missing AD user");
 
+            //Invalidate any old tokens
             await _tokenSvc.InvalidateUserTokens(request.Username);
             DateTime expiration = request.Persist ? DateTime.MaxValue : DateTime.Now.AddHours(6);
             RoleType role = await GetRoleFromGroups(ldapUser.MemberOf);
 
             var tokenRequest = new TokenRequest
             {
+                ActiveDirectoryId = ldapUser.Id,
+                Audience = "https://unionized.unionsquared.lan", //TODO: Not hardcode
                 Email = ldapUser.Email,
-                ObjectId = ldapUser.Id,
                 Expiration = expiration,
+                Issuer = "Unionized.API", //TODO: Not hardcode
                 Persist = request.Persist,
                 Role = role,
                 Name = ldapUser.Name,
@@ -73,10 +76,7 @@ namespace Unionized.Service
 
             if (userToken != null)
             {
-                userToken.Active = false;
-                userToken.UpdatedAt = DateTime.Now;
-
-                await _tokenSvc.SaveAsync(userToken);
+                await _tokenSvc.DeleteAsync(userToken.Slug);
             }
         }
 
@@ -89,9 +89,12 @@ namespace Unionized.Service
             if (!validToken)
             {
                 await _tokenSvc.InvalidateUserTokens(username);
+                return false;
             }
 
-            return validToken;
+            var claims = _tokenSvc.ValidateToken(token, "https://unionized.unionsquared.lan", "Unionized.API"); //TODO: Not hardcode
+
+            return claims != null;
         }
 
         //CN=SG_Unionized_Admin,CN=Users,DC=unionsquared,DC=lan

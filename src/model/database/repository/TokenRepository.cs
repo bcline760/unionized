@@ -27,5 +27,21 @@ namespace Unionized.Model.Database.Repository
 
             return tokenList;
         }
+
+        public override async Task<int> UpdateAsync(UserToken entity)
+        {
+            var model = new UserTokenModel { ID = entity.ID };
+
+            model.Slug = entity.Slug;
+            model.Active = entity.Active;
+            model.CreatedAt = entity.CreatedAt;
+            model.GeneratedBy = entity.GeneratedBy;
+            model.TokenExpiry = entity.TokenExpiry;
+            model.TokenString = entity.TokenString;
+
+            Set.Attach(model);
+            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
+            return recordsModified;
+        }
     }
 }

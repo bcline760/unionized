@@ -96,5 +96,10 @@ namespace Unionized.Model.Database.Repository
 
             return logs;
         }
+
+        public override Task<int> UpdateAsync(NetworkLog entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

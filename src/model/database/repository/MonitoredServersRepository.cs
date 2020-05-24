@@ -16,5 +16,10 @@ namespace Unionized.Model.Database.Repository
         public MonitoredServersRepository(IUnionizedContext context, IMapper mapper) : base(context, mapper)
         {
         }
+
+        public override Task<int> UpdateAsync(MonitoredServer entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
