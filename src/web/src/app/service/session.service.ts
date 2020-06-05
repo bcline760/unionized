@@ -2,9 +2,10 @@ import { Injectable, Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, throwError } from 'rxjs';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
+import * as jwt from 'jsonwebtoken';
+
 import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
-
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
 import { UnionizedService } from './unionized.service';
@@ -44,6 +45,7 @@ export class SessionService extends UnionizedService {
                     username: username
                 };
                 this.storage.set(environment.tokenStorageKey, token);
+                this.authenticationToken = token;
             }
         } catch (e) {
             console.log(e);
@@ -67,7 +69,7 @@ export class SessionService extends UnionizedService {
                 token: authToken.loginToken
             };
 
-            const response = await this.http.sendAsync<any, any>(url, logoutRequest, "POST");
+            const response = await this.http.getAsync<any>(url, authToken.loginToken);
 
             return response;
         } catch (e) {
@@ -82,7 +84,7 @@ export class SessionService extends UnionizedService {
         try {
             if (this.authenticationToken != undefined) {
                 const url: string = `${environment.apiUrl}/${this.apiController}/validate`;
-                await this.http.getAsync<boolean>(url, this.authenticationToken);
+                await this.http.getAsync<boolean>(url, this.authenticationToken.loginToken);
 
                 valid = true;
             }

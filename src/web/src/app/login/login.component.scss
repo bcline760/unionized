@@ -2,21 +2,21 @@
 @import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
 
 div.main {
-  background: #0264d6;
+  background: #026066;
   /* Old browsers */
-  background: -moz-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -moz-radial-gradient(center, ellipse cover, #026066 1%, #27abb3 100%);
   /* FF3.6+ */
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%, #0264d6), color-stop(100%, #1c2b5a));
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%, #27abb3), color-stop(100%, #B35F27));
   /* Chrome,Safari4+ */
-  background: -webkit-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -webkit-radial-gradient(center, ellipse cover, #026066 1%, #27abb3 100%);
   /* Chrome10+,Safari5.1+ */
-  background: -o-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -o-radial-gradient(center, ellipse cover, #026066 1%, #27abb3 100%);
   /* Opera 12+ */
-  background: -ms-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #026066 1%, #27abb3 100%);
   /* IE10+ */
-  background: radial-gradient(ellipse at center, #0264d6 1%, #1c2b5a 100%);
+  background: radial-gradient(ellipse at center, #026066 1%, #27abb3 100%);
   /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0264d6', endColorstr='#1c2b5a', GradientType=1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#026066', endColorstr='#27abb3', GradientType=1);
   /* IE6-9 fallback on horizontal gradient */
   height: calc(100vh);
   width: 100%;
@@ -109,7 +109,7 @@ p {
 
 .logo {
   color: #fff;
-  background: no-repeat center/90% url(../../assets/union.png)
+  background: no-repeat center/80% url(../../assets/unionsqmain.png);
 }
 
 #login form span.fa {

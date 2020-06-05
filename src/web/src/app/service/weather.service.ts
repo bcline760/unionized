@@ -19,7 +19,7 @@ export class WeatherService extends UnionizedService {
     public async getCurrentConditions(zipCode: number): Promise<Weather> {
         //const url: string = `${this.apiUrl}&zip=${zipCode},us`;
         const url: string = `${environment.apiUrl}/${this.apiController}`;
-        const result = await this.http.getAsync<Weather>(url,this.authenticationToken);
+        const result = await this.http.getAsync<Weather>(url,this.authenticationToken.loginToken);
 
         return result;
     }

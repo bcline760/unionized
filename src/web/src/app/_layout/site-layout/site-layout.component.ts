@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from 'src/app/service/session.service';
+import { Router } from '@angular/router';
+import { LoadingService } from 'src/app/service/loading.service';
 
 @Component({
   selector: 'app-site-layout',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SiteLayoutComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    protected session: SessionService,
+    protected loading: LoadingService,
+    protected router: Router) { }
 
   ngOnInit() {
   }
 
+  async signOut(): Promise<void> {
+    this.loading.show();
+    await this.session.logoutAsync();
+    this.loading.hide();
+    this.router.navigate(['login']);
+  }
 }

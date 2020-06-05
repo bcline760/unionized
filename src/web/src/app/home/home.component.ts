@@ -14,7 +14,6 @@ import { MonitoredServer } from '../model/monitored-server';
 export class HomeComponent implements OnInit, OnDestroy {
     public model: HomeModel;
     public dtOptions: DataTables.Settings = {};
-    public dtTrigger: Subject<MonitoredServer> = new Subject();
 
     constructor(
         public weather: WeatherService,
@@ -27,25 +26,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loadingSvc.show();
         // this.model.weather = this.weather.getCurrentConditions(92101);
 
-        this.dtOptions = {
-            search: false,
-            searching: false,
-            paging: false,
-            processing: true,
-            info: false,
-            language: {
-                emptyTable: "Wait for it...",
-                zeroRecords: "Nothing..."
-            }
-        };
-
         this.model.servers = await this.serverSvc.checkAllServers();
-        this.dtTrigger.next();
         this.loadingSvc.hide();
     }
 
     ngOnDestroy(): void {
-        this.dtTrigger.unsubscribe();
-
     }
 }

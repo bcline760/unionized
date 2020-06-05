@@ -48,8 +48,9 @@ namespace Unionized.Api
             var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
             var certificatePath = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
 
-            services.AddControllers()
-                .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddControllers()
+            //    .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers();
             services.AddOptions();
             services.AddCors(o =>
             {

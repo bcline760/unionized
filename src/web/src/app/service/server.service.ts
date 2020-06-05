@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
 import { UnionizedService } from './unionized.service';
 import { MonitoredServer } from '../model/monitored-server';
+import { ApiResponse } from '../model/apiresponse.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,10 +19,10 @@ export class ServerService extends UnionizedService {
   public async checkAllServers(): Promise<MonitoredServer[]> {
     const url: string = `${environment.apiUrl}/${this.apiController}/check`;
 
-    const response:any = await this.http.getAsync(url, this.authenticationToken);
+    const response:ApiResponse<MonitoredServer[]> = await this.http.getAsync(url, this.authenticationToken.loginToken);
 
     if (response.success) {
-      let servers:MonitoredServer[] = response.data;
+      const servers:MonitoredServer[] = response.data;
 
       return servers;
     }

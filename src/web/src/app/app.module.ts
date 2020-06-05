@@ -20,6 +20,7 @@ import { SiteLayoutComponent } from './_layout/site-layout/site-layout.component
 import { LoadingOverlayComponent } from './loading-overlay/loading-overlay.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PageNotFoundModule } from './page-not-found/page-not-found.module';
 
 export function tokenGetter() {
     return localStorage.getItem(environment.tokenStorageKey);
@@ -46,7 +47,8 @@ export function tokenGetter() {
         AppRoutingModule,
         LoginModule,
         HomeModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        PageNotFoundModule
         //NetlogModule
     ],
     entryComponents: [LoadingOverlayComponent],
