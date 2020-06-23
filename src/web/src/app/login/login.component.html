@@ -1,32 +1,32 @@
-<div class="main">
-  <div class="container">
-    <div class="middle">
-      <div id="login">
-        <form #loginForm="ngForm" (ngSubmit)="onLogin()">
-          <fieldset class="clearfix">
-            <p><span class="fa fa-user"></span><input type="text" Placeholder="Username" required
-                [(ngModel)]="model.username" #username="ngModel" name="username"></p>
-            <div class="alert alert-danger" [hidden]="username.valid || username.pristine">
-              Please provide your username
-            </div>
-            <p><span class="fa fa-lock"></span><input type="password" Placeholder="Password" required
-                [(ngModel)]="model.password" #password="ngModel" name="password"></p>
-            <div class="alert alert-danger" [hidden]="password.valid || password.pristine">
-              Please provide your password.
-            </div>
-            <div>
-              <span style="width:48%; text-align:left;  display: inline-block;"><a class="small-text" href="#">Forgot
-                  password?</a></span>
-              <span style="width:50%; text-align:right;  display: inline-block;"><input type="submit" value="Sign In" ></span>
-            </div>
-          </fieldset>
-          <div class="clearfix"></div>
-        </form>
-        <div class="clearfix"></div>
-      </div> <!-- end login -->
-      <div class="logo">
-        <div class="clearfix"></div>
+<div class="d-flex justify-content-center">
+  <div class="flex-column">
+    <div class="p-2 logo">&nbsp;</div>
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+      <div class="p-2">
+        <div class="form-group">
+          <label for="username"><span class="fa fa-user"></span>&nbsp;User ID</label>
+          <input type="text" class="form-control" id="username" placeholder="User ID" [(ngModel)]="model.username" name="username"
+            #username="ngModel" />
+        </div>
       </div>
-    </div>
+      <div class="p-2">
+        <div class="form-group">
+          <label for="password"><span class="fa fa-lock"></span>&nbsp;Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+            [(ngModel)]="model.password" #password="ngModel" />
+        </div>
+      </div>
+      <div class="p-2">
+        <div class="form-check">
+          <input type="checkbox" name="remember" id="remember">
+          <label for="remember" class="form-check-label">&nbsp;Remember Me</label>
+        </div>
+      </div>
+      <div class="p-2">
+        <input type="submit" value="Log On" class="btn btn-primary" />
+        &nbsp;
+        <input type="reset" value="Reset" class="btn btn-light" />
+      </div>
+    </form>
   </div>
 </div>

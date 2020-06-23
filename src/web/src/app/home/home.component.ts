@@ -3,8 +3,6 @@ import { WeatherService } from '../service/weather.service'
 import { LoadingService } from '../service/loading.service';
 import { HomeModel } from './home-model';
 import { ServerService } from '../service/server.service';
-import { Subject } from 'rxjs';
-import { MonitoredServer } from '../model/monitored-server';
 
 @Component({
     selector: 'app-home',

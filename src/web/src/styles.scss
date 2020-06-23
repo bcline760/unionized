@@ -1,9 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
-html,
-body
-{
-    height: 100%;
-    overflow: hidden;
+@media only screen and (min-width: 768px) {
+    html,
+    body
+    {
+        height: 100%;
+        overflow: hidden;
+    }
 }
 
 .bg-color-66300C { background-color: #66300C; }
