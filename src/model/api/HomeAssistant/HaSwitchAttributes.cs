@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Unionized.Model.API.HomeAssistant
 {
-    public class HaSwitchAttributes
+    public class HaSwitchAttributes : HaAttributes
     {
         [JsonProperty("current_a", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public string CurrentA { get; set; }

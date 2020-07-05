@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Unionized.Model.API.HomeAssistant
 {
-    public class HaBatteryAttributes
+    public class HaBatteryAttributes : HaAttributes
     {
         [JsonProperty("account_fetch_interval", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public long? AccountFetchInterval { get; set; }

@@ -17,7 +17,7 @@ namespace Unionized.Model.API.HomeAssistant
     public abstract class HaState
     {
         [JsonProperty("attributes", Required = Required.Always)]
-        public HaAttributes Attributes { get; set; }
+        public virtual HaAttributes Attributes { get; set; }
 
         [JsonProperty("context", Required = Required.Always)]
         public HaContext Context { get; set; }

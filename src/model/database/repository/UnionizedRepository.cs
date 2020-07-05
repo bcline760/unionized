@@ -44,7 +44,7 @@ namespace Unionized.Model.Database.Repository
                 entity.Slugify();
             
             var model = Mapper.Map<TModel>(entity);
-            Set.Attach(model).State = EntityState.Added;
+            Set.Attach(model).State = Microsoft.EntityFrameworkCore.EntityState.Added;
 
             int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
             return recordsModified;

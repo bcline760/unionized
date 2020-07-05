@@ -20,9 +20,7 @@ namespace Unionized
 
         public ServiceAccount ServiceAccount { get; set; }
 
-        public ApiEndpoint Weather { get; set; }
-
-        public ApiEndpoint OpenHab { get; set; }
+        public ApiEndpoint HomeAssistant { get; set; }
     }
 
     public class LdapSettings
