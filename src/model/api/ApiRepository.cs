@@ -9,58 +9,44 @@ namespace Unionized.Model.API
 {
     internal abstract class ApiRepository
     {
-        protected async Task<TContract> GetFromApiAsync<TContract, TModel>(string method, ApiEndpoint endpoint, Func<TModel,TContract> mapFunc)
+        protected ApiRepository(ApiEndpoint endpoint)
         {
-            HttpClient hc = null;
-            try
-            {
-                hc = new HttpClient();
-                hc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", endpoint.ApiKey);
+            Endpoint = endpoint;
+        }
 
-                string url = $"{endpoint.Endpoint}/{method}";
+        protected async Task<string> GetFromApiAsync(string method)
+        {
+            using (HttpClient hc = new HttpClient())
+            {
+                hc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Endpoint.ApiKey);
+
+                string url = $"{Endpoint.Endpoint}/{method}";
                 var response = await hc.GetAsync(url, HttpCompletionOption.ResponseContentRead);
                 response.EnsureSuccessStatusCode(); //Fail if there is a problem with the request
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var model = JsonConvert.DeserializeObject<TModel>(responseContent);
-                var contract = mapFunc(model);
 
-                return contract;
-            }
-            finally
-            {
-                if (hc != null)
-                    hc.Dispose();
+                return responseContent;
             }
         }
 
-        protected async Task<TContract> SendToApiAsync<TContract, TModel>(string method, TContract body, ApiEndpoint endpoint, Func<TModel, TContract> mapFunc)
+        protected async Task<string> SendToApiAsync(string method, string body)
         {
-            HttpClient hc = null;
-            try
+            using (HttpClient hc = new HttpClient())
             {
-                hc = new HttpClient();
-                hc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", endpoint.ApiKey);
+                hc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Endpoint.ApiKey);
 
-                string url = $"{endpoint.Endpoint}/{method}";
-                string jsonBody = JsonConvert.SerializeObject(body);
-                var content = new StringContent(jsonBody);
+                string url = $"{Endpoint.Endpoint}/{method}";
+                var content = new StringContent(body);
                 var response = await hc.PostAsync(url, content);
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var model = JsonConvert.DeserializeObject<TModel>(responseContent);
-                var contract = mapFunc(model);
 
-                return contract;
-            }
-            finally
-            {
-                if (hc != null)
-                    hc.Dispose();
+                return responseContent;
             }
         }
 
-        protected UnionizedConfiguration Configuration { get; set; }
+        protected ApiEndpoint Endpoint { get; }
     }
 }

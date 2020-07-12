@@ -4,14 +4,14 @@ using System.Runtime.Serialization;
 namespace Unionized.Contract
 {
     [DataContract]
-    public class EntityState<TAttributes> where TAttributes : EntityAttributes
+    public class EntityState
     {
         public EntityState()
         {
         }
 
         [DataMember]
-        public TAttributes Attributes { get; set; }
+        public EntityAttributes Attributes { get; set; }
         [DataMember]
         public string EntityId { get; set; }
         [DataMember]

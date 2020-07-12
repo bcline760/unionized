@@ -1,9 +1,7 @@
 ﻿using Autofac;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 using Unionized.Contract.Repository;
-using Unionized.Model.API.Weather;
+using Unionized.Model.API.HomeAssistant;
 
 namespace Unionized.Model.API
 {
@@ -11,9 +9,24 @@ namespace Unionized.Model.API
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherRepository>()
-                .As<IWeatherRepository>()
-                .InstancePerLifetimeScope();
+            //builder.Register(r =>
+            //{
+            //    var config = r.Resolve<UnionizedConfiguration>();
+            //    var optionsBuilder = new DbContextOptionsBuilder<UnionizedContext>();
+            //    optionsBuilder.UseMySql(config.ConnectionString);
+
+            //    return new UnionizedContext(optionsBuilder.Options);
+            //}).As<IUnionizedContext>().InstancePerLifetimeScope();
+
+            UnionizedConfiguration config = null;
+            builder.Register(r =>
+            {
+                config = r.Resolve<UnionizedConfiguration>();
+
+                var switchRepo = new HaRepository(config.HomeAssistant);
+
+                return switchRepo;
+            }).As<IHaRepository>().InstancePerLifetimeScope();
         }
     }
 }

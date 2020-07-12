@@ -14,10 +14,10 @@ using Unionized;
 
 namespace Unionized.Model.API.HomeAssistant
 {
-    public abstract class HaState
+    public class HaState
     {
         [JsonProperty("attributes", Required = Required.Always)]
-        public virtual HaAttributes Attributes { get; set; }
+        public HaAttributes Attributes { get; set; }
 
         [JsonProperty("context", Required = Required.Always)]
         public HaContext Context { get; set; }

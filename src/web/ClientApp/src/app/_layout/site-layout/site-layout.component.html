@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-md sticky-top navbar-dark bg-color-66300C color-white border-bottom">
+  <a class="navbar-brand">Unionized</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar"
+    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['']"><i class="fa fa-dashboard fa-lg"></i>&nbsp;Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/network']"><i class="fa fa-list-alt fa-lg"></i>&nbsp;Network Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/jenkins']"><i class="fab fa-jenkins"></i>&nbsp;Jenkins</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/profile']"><i class="fa fa-user fa-lg"></i>&nbsp;Profile</a>
+      </li>
+      <li class="nav-item">
+        <a (click)="signOut()" class="nav-link">
+          <i class="fa fa-power-off fa-lg"></i> Sign out
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container-fluid mt-1">
+  <router-outlet></router-outlet>
+</div>

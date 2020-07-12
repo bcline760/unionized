@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="RestSharp" Version="106.6.10" />
   </ItemGroup>
@@ -13,9 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\contract\Unionized.Contract.csproj" />
     <ProjectReference Include="..\..\core\Unionized.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HomeAssistant\" />
   </ItemGroup>
 </Project>
