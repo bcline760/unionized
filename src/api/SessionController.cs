@@ -67,6 +67,7 @@ namespace Unionized.Api.Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpGet, Route("validate")]
         public async Task<IActionResult> Validate()
         {

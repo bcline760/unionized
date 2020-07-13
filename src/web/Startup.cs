@@ -13,14 +13,25 @@ using Microsoft.IdentityModel.Tokens;
 
 using Autofac;
 using Unionized.Api.Controllers;
+using Autofac.Core;
+using Unionized.Service;
 
 namespace Unionized.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            IsDevelopment = env.IsDevelopment();
+
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile($"{appDir}/unionized/appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            this.Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; private set; }
@@ -77,6 +88,18 @@ namespace Unionized.Web
             });
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            var config = Configuration.Get<UnionizedConfiguration>();
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+
+            string path = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
+            config.Certificate.CertificateLocation = path;
+
+            builder.RegisterInstance(config).SingleInstance();
+            RegisterModules.Register(builder, config);
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -100,6 +123,9 @@ namespace Unionized.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -109,10 +135,10 @@ namespace Unionized.Web
 
             app.UseSpa(spa =>
             {
-          // To learn more about options for serving an Angular SPA from ASP.NET Core,
-          // see https://go.microsoft.com/fwlink/?linkid=864501
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
 
-          spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
