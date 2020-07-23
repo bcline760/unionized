@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"path": "src/web/ClientApp/",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "npm: build - src/web/ClientApp",
+			"detail": "ng build"
+		},
+		{
+			"type": "shell",
+			"detail": ""
+		}
+	]
+}

@@ -233,4 +233,13 @@ _Pvt_Extensions
 # Angular output
 **/dist
 
+# Ignore Mac files
 **/.DS_Store
+
+# Ignore dev app settings
+**/appsettings.Development.json
+**/appsettings.dev.json
+
+**/.terraform
+**/terraform.tfstate*
+**/*.tfplan

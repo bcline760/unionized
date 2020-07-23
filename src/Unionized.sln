@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unionized.Api", "api\Unioni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unionized.Model.API", "model\api\Unionized.Model.API.csproj", "{997491A7-C573-4D28-B438-E44991A91F50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unionized.Web", "web\Unionized.Web.csproj", "{7C6906BA-B2B6-4550-9A0B-DB942F1BDB59}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
