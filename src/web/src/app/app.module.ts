@@ -25,6 +25,7 @@ import { SessionModule } from './session/session.module';
 
 //Client components
 import { AppComponent } from './app.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function fnTokenGetter() {
   return localStorage.getItem("access_token");
@@ -54,7 +55,8 @@ export function fnTokenGetter() {
         HomeModule,
         NetworkModule,
         SessionModule,
-        AppRoutingModule
+        AppRoutingModule,
+        NgbModule
     ],
     entryComponents: [],
     providers: [JwtHelperService, HttpClientService, SessionService],

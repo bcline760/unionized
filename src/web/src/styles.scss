@@ -38,56 +38,44 @@ input[type=checkbox] {
 
 .clear { clear: both ;}
 
-.form-control {
-  display: block;
-  width: 100%;
-  border: 1px solid #c4573d;
-  border-radius: 0.3rem;
-  font-size: 1rem;
-  height: calc(2.25rem + 2px);
-  line-height: 1.5;
+.alert-primary {
+  color: #FFF;
+  background-color: #AD6F3E;
+  border-color: #c4573d;
 }
 
-.form-control:focus {
-  border: 0;
+.alert-secondary {
+  color: #000;
+  background-color: #bda740;
+  border-color: #c4953d;
 }
 
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-check {
-  position: relative;
-  display: block;
-  padding-left: 1.25rem;
-}
-
-.form-check-input {
-  position: absolute;
-  margin-top: .3rem;
-  margin-left: -1.25rem;
-}
-
-.btn {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-  white-space: nowrap;
-  font-size: 1rem;
-  height: calc(2.25rem + 2px);
-  line-height: 1.5;
-  border: 1px solid transparent;
-  border-radius: 0.3rem;
+.alert-info {
+  color: #000;
+  background-color: #c4953d;
+  border-color: #c4573d;
 }
 
 .btn-primary {
+  color: #FFF;
   background-color: #AD6F3E;
   border-color: #c4573d;
+}
+
+.btn-primary:hover {
   color: #FFF;
+  background-color: #c4573d;
+  border-color: #ba3a52;
 }
 
 .btn-secondary {
-  color: #c4573d;
-  background-color: transparent;
-  border-color: #c4573d;
+  color: #000;
+  background-color: #bda740;
+  border-color: #c4953d;
+}
+
+.btn-secondary:hover {
+  color: #000;
+  background-color: #c4953d;
+  border-color: #AD6F3E;
 }

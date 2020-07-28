@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -34,19 +35,20 @@ export class HttpClientService {
             })
         };
 
+        const requestUrl=`https://${environment.domain}/api${url}`;
         let data:R;
         switch (method) {
             case "GET":
-                data = await this.http.get<R>(url, httpOptions).toPromise();
+                data = await this.http.get<R>(requestUrl, httpOptions).toPromise();
                 break;
             case "PUT":
-                data = await this.http.put<R>(url, body, httpOptions).toPromise();
+                data = await this.http.put<R>(requestUrl, body, httpOptions).toPromise();
                 break;
             case "POST":
-                data = await this.http.post<R>(url, body, httpOptions).toPromise();
+                data = await this.http.post<R>(requestUrl, body, httpOptions).toPromise();
                 break;
             case "DELETE":
-                data = await this.http.delete<R>(url,httpOptions).toPromise();
+                data = await this.http.delete<R>(requestUrl,httpOptions).toPromise();
                 break;
         }
 

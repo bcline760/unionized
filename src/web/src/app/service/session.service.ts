@@ -19,7 +19,7 @@ export class SessionService extends AppService {
   }
 
   async authenticateAsync(request: LoginRequest): Promise<boolean> {
-    const url = `${environment.apiUrl}/session/login`;
+    const url = `/session/login`;
 
     try {
       const response: LoginResponse = await this.httpService.postAsync<LoginResponse, LoginRequest>(url, request);
@@ -37,7 +37,7 @@ export class SessionService extends AppService {
   }
 
   async signoutAsync(username: string, token: string): Promise<any> {
-    const url = `${environment.apiUrl}/session/logout`;
+    const url = `/session/logout`;
 
     try {
       const result = await this.httpService.getAsync(url);
@@ -48,7 +48,7 @@ export class SessionService extends AppService {
   }
 
   async validateTokenAsync(username: string, token: string): Promise<boolean> {
-    const url = `${environment.apiUrl}/session/validate`;
+    const url = `/session/validate`;
 
     let valid: boolean = false;
     try {

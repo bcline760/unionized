@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public model: Login | null = null;
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(s=>{
+    this.activatedRoute.queryParams.subscribe(s => {
       if (s['redirect'] !== null) {
         this.redirectRoute = s['redirect'];
       }
@@ -41,6 +41,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigate(['/home']);
         }
+      } else {
+        this.model.logonRequest.username = null;
+        this.model.logonRequest.password = null;
       }
     }
   }

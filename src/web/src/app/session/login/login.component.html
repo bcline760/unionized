@@ -1,6 +1,6 @@
 <div class="login-form shade-darkest-border">
   <div class="login-img-header mx-auto">&nbsp;</div>
-  <form #logonForm="ngForm">
+  <form #logonForm="ngForm" (ngSubmit)="loginAsync()">
     <div class="form-group">
       <input *ngIf="model !== null && model.logonRequest !== null" type="text" name="username" id="username"
         placeholder="Username" [(ngModel)]="model.logonRequest.username" #username="ngModel"
