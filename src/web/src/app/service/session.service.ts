@@ -5,13 +5,16 @@ import { LoginRequest } from '../model/login-request';
 import { environment } from 'src/environments/environment';
 import { throwError } from 'rxjs';
 import { LoginResponse } from '../model/login-response';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService extends AppService {
 
-  constructor(protected httpService: HttpClientService) {
+  constructor(
+    protected httpService: HttpClientService,
+    protected jwtService: JwtHelperService) {
     super(httpService);
   }
 
@@ -22,10 +25,7 @@ export class SessionService extends AppService {
       const response: LoginResponse = await this.httpService.postAsync<LoginResponse, LoginRequest>(url, request);
 
       if (response.status == 0) {
-        this.authToken = {
-          loginToken: response.logonToken,
-          username: request.Username
-        };
+        localStorage.setItem('access_token',response.logonToken);
         return true;
       }
     } catch (e) {
@@ -40,7 +40,7 @@ export class SessionService extends AppService {
     const url = `${environment.apiUrl}/session/logout`;
 
     try {
-      const result = await this.httpService.getAsync(url, this.authToken.loginToken);
+      const result = await this.httpService.getAsync(url);
     } catch (e) {
       console.log(e);
       throwError('signoutAsync');
@@ -52,7 +52,7 @@ export class SessionService extends AppService {
 
     let valid: boolean = false;
     try {
-      await this.httpService.getAsync(url, this.authToken.loginToken);
+      await this.httpService.getAsync(url);
 
       valid = true;
     } catch (e) {

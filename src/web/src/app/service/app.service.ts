@@ -4,23 +4,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { AuthToken } from '../model/auth-token.model';
 
-@Injectable({
-    providedIn: 'root'
-})
 export abstract class AppService {
-    constructor(
-        protected httpService: HttpClientService
-    ) { }
 
-    protected authToken: AuthToken;
+  constructor(protected httpService: HttpClientService) {
 
-    protected handleError(error: HttpErrorResponse) {
-        if (error.error instanceof ErrorEvent) {
-            console.error('An error has occured:', error.message);
-        } else {
-            console.error('API server returned', error.status);
-        }
+  }
 
-        return throwError('An error has occured within the application');
+  protected handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('An error has occured:', error.message);
+      throwError('An error has occured within the application');
+    } else {
+      console.error('API server returned', error.status);
     }
+  }
 }

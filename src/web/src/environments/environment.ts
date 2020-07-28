@@ -7,7 +7,7 @@ export const environment = {
   apiUrl: "api",
   homeAssistApi: "",
   homeAssistToken: "",
-  domain: "localhost:44359",
+  domain: "localhost:44343",
   tokenStorageKey: "API_TOKEN"
 };
 

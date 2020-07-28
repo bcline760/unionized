@@ -35,7 +35,7 @@ namespace Unionized.Api
             {
                 builder = new ConfigurationBuilder()
                     .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables();
             }
             else
@@ -54,8 +54,7 @@ namespace Unionized.Api
         {
             //Don't have a reference to the DI framework...yet or I don't know how to get it...yet
             var config = Configuration.Get<UnionizedConfiguration>();
-            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
-            var certificatePath = string.Format(config.Certificate.CertificateLocation, $"{appDir}/unionized");
+
             services.AddControllers();
             services.AddOptions();
 
@@ -77,7 +76,7 @@ namespace Unionized.Api
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateTokenReplay = true,
-                    IssuerSigningKey = new X509SecurityKey(new X509Certificate2(certificatePath, config.Certificate.Password)),
+                    IssuerSigningKey = new X509SecurityKey(new X509Certificate2(config.Certificate.CertificateLocation, config.Certificate.Password)),
                     ValidateIssuer = !IsDevelopment,
                     ValidateAudience = !IsDevelopment
                 };
@@ -110,6 +109,7 @@ namespace Unionized.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

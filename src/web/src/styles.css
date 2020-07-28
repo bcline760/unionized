@@ -1,1 +1,93 @@
 /* You can add global styles to this file, and also import other style files */
+
+html {
+  display: block;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type=checkbox] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.shade-lightest { color: #bda740; }
+.shade-lighter { color: #c4953d;}
+.primary-color { color: #AD6F3E; }
+.shade-darker { color: #c4573d;}
+.shade-darkest { color: #ba3a52; }
+
+.shade-lightest-bg { background-color: #bda740; }
+.shade-lighter-bg { background-color: #c4953d;}
+.primary-color-bg { background-color: #AD6F3E; }
+.shade-darker-bg { background-color: #c4573d;}
+.shade-darkest-bg { background-color: #ba3a52; }
+
+.shade-lightest-border { border-color: #bda740 !important; }
+.shade-lighter-border { border-color: #c4953d !important; }
+.primary-color-border { border-color: #AD6F3E !important; }
+.shade-darker-border { border-color: #c4573d !important; }
+.shade-darkest-border { border-color: #ba3a52 !important; }
+
+.color-white { color: #FFF; }
+.color-black { color: #000;}
+
+.clear { clear: both ;}
+
+.form-control {
+  display: block;
+  width: 100%;
+  border: 1px solid #c4573d;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5;
+}
+
+.form-control:focus {
+  border: 0;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-check {
+  position: relative;
+  display: block;
+  padding-left: 1.25rem;
+}
+
+.form-check-input {
+  position: absolute;
+  margin-top: .3rem;
+  margin-left: -1.25rem;
+}
+
+.btn {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 1rem;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+}
+
+.btn-primary {
+  background-color: #AD6F3E;
+  border-color: #c4573d;
+  color: #FFF;
+}
+
+.btn-secondary {
+  color: #c4573d;
+  background-color: transparent;
+  border-color: #c4573d;
+}

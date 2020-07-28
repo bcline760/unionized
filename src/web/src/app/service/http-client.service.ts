@@ -7,37 +7,33 @@ import { Observable } from 'rxjs';
 })
 export class HttpClientService {
 
-    constructor(private http: HttpClient) { }
+    constructor(protected http: HttpClient) { }
 
     /// Get data from the webserver
-    async getAsync<R>(url: string, authToken?: string): Promise<R> {
-        return await this._executeHttpMethod(url, "GET", authToken);
+    async getAsync<R>(url: string): Promise<R> {
+        return await this._executeHttpMethod(url, "GET");
     }
 
-    async putAsync<R, B>(url: string, body: B, authToken?: string):Promise<R> {
-        return await this._executeHttpMethod(url, "PUT", authToken, body);
+    async putAsync<R, B>(url: string, body: B):Promise<R> {
+        return await this._executeHttpMethod(url, "PUT",body);
     }
 
-    async postAsync<R, B>(url: string, body: B, authToken?: string): Promise<R> {
-        return await this._executeHttpMethod(url,"POST", authToken, body);
+    async postAsync<R, B>(url: string, body: B): Promise<R> {
+        return await this._executeHttpMethod(url,"POST",body);
     }
 
     ///Delete data from the webserver
-    async deleteAsync<R>(url: string, authToken?: string): Promise<R> {
-        return await this._executeHttpMethod(url, "DELETE", authToken);
+    async deleteAsync<R>(url: string): Promise<R> {
+        return await this._executeHttpMethod(url, "DELETE");
     }
 
-    private async _executeHttpMethod<R, B>(url: string, method: "GET" | "PUT" | "POST"| "DELETE", authToken?: string, body?: B): Promise<R> {
+    private async _executeHttpMethod<R, B>(url: string, method: "GET" | "PUT" | "POST"| "DELETE",  body?: B): Promise<R> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
             })
         };
 
-        if (authToken) {
-            httpOptions.headers = httpOptions.headers.set('Authorization', `Bearer ${authToken}`);
-        }
-        
         let data:R;
         switch (method) {
             case "GET":

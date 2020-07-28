@@ -66,7 +66,12 @@ namespace Unionized.Service
             };
             var userToken = await _tokenSvc.GenerateAuthenticationTokenAsync(tokenRequest);
 
+            result.Email = ldapUser.Email;
+            result.FirstName = ldapUser.FirstName;
+            result.LastName = ldapUser.LastName;
             result.LogonToken = userToken.TokenString;
+            result.Role = role;
+            result.Username = request.Username;
             return result;
         }
 

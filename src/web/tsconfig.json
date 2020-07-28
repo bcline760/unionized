@@ -8,6 +8,9 @@
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true,
+    "alwaysStrict": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -22,7 +25,7 @@
     ]
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
+    "strictTemplates": true,
     "strictInjectionParameters": true
   }
 }
