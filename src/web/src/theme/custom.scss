@@ -2,7 +2,21 @@
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
 
-$primary: #AD6F3E;
-$secondary: #bda740;
+$shade-lighter: #FFDBA6;
+$primary-color: #D1AB73;
+$shade-darker: #855F26;
+$complementary-light: #73A9D1;
+$complementary-dark: #2E6085;
 
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+$danger-color: #d14156;
+$success-color: #62d178;
+$warning-color: #d1b769;
+
+$theme-colors: (
+  "primary": $primary-color,
+  "secondary": $complementary-light,
+  "info": $shade-lighter,
+  "warning": $warning-color,
+  "danger": $danger-color,
+  "success": $success-color
+);

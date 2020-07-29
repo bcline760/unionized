@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faHome, faNetworkWired, faCertificate, faSignOutAlt, faMobile, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navigation',
@@ -12,4 +13,9 @@ export class NavigationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public faHome: IconDefinition = faHome;
+  public faNetworkWired: IconDefinition = faNetworkWired;
+  public faCertificate: IconDefinition = faCertificate;
+  public faSignOut: IconDefinition = faSignOutAlt;
+  public faMobile: IconDefinition = faMobile;
 }

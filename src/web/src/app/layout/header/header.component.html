@@ -1,1 +1,5 @@
-<p>header works!</p>
+<header class="d-flex flex-row-reverse">
+  <div class="p-3"><a [routerLink]="['/session/signout']">Sign Out</a></div>
+  <div class="p-3"><a [routerLink]="['/home']">Home</a></div>
+  <div class="p-3">Welcome, {{model.authenticatedName}}</div>
+</header>

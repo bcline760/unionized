@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { throwError } from 'rxjs';
 import { LoginResponse } from '../model/login-response';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthenticatedUser } from '../model/authenticated-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class SessionService extends AppService {
       const response: LoginResponse = await this.httpService.postAsync<LoginResponse, LoginRequest>(url, request);
 
       if (response.status == 0) {
-        localStorage.setItem('access_token',response.logonToken);
+        localStorage.setItem('access_token', response.logonToken);
         return true;
       }
     } catch (e) {
@@ -36,7 +37,21 @@ export class SessionService extends AppService {
     return false;
   }
 
-  async signoutAsync(username: string, token: string): Promise<any> {
+  readToken(): AuthenticatedUser | null {
+    if (this.jwtService.isTokenExpired()) {
+      return null;
+    }
+
+    const token = this.jwtService.decodeToken();
+    const user: AuthenticatedUser = new AuthenticatedUser();
+    user.authenticated = true;
+    user.email = token.email;
+    user.fullName = token.unique_name;
+
+    return user;
+  }
+
+  async signoutAsync(): Promise<any> {
     const url = `/session/logout`;
 
     try {

@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LoginRequest } from 'src/app/model/login-request';
-import { SessionService } from 'src/app/service/session.service';
 import { Router, ActivatedRoute } from '@angular/router';
+
 import { Login } from './login.model';
-import { Observable } from 'rxjs';
+import { SessionService } from 'src/app/service/session.service';
+import { LoadingService } from 'src/app/service/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +14,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   public model: Login | null = null;
   public redirectRoute: string | null = null;
 
-  constructor(private session: SessionService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private session: SessionService,
+    private loading: LoadingService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
     if (this.model === null) {
       this.model = new Login();
+      this.model.valid = true;
     }
   }
 
@@ -34,16 +38,20 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   async loginAsync(): Promise<void> {
     if (this.model !== null) {
+      this.model.valid = true;
+      this.loading.show('Logging In...');
       const result = await this.session.authenticateAsync(this.model.logonRequest);
+      this.loading.hide();
       if (result) {
         if (this.redirectRoute !== null) {
-          this.router.navigate([this.redirectRoute]);
+          this.router.navigateByUrl(this.redirectRoute);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['home', '']);
         }
       } else {
         this.model.logonRequest.username = null;
         this.model.logonRequest.password = null;
+        this.model.valid = false;
       }
     }
   }

@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "theme/custom.scss";
 
 html {
   display: block;
@@ -7,75 +8,28 @@ html {
 body {
   height: 100vh;
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-input[type=checkbox] {
-  box-sizing: border-box;
-  padding: 0;
+a, a:link {
+  color: $shade-darker;
+  text-decoration: none;
+  background-color: transparent;
 }
 
-.shade-lightest { color: #bda740; }
-.shade-lighter { color: #c4953d;}
-.primary-color { color: #AD6F3E; }
-.shade-darker { color: #c4573d;}
-.shade-darkest { color: #ba3a52; }
-
-.shade-lightest-bg { background-color: #bda740; }
-.shade-lighter-bg { background-color: #c4953d;}
-.primary-color-bg { background-color: #AD6F3E; }
-.shade-darker-bg { background-color: #c4573d;}
-.shade-darkest-bg { background-color: #ba3a52; }
-
-.shade-lightest-border { border-color: #bda740 !important; }
-.shade-lighter-border { border-color: #c4953d !important; }
-.primary-color-border { border-color: #AD6F3E !important; }
-.shade-darker-border { border-color: #c4573d !important; }
-.shade-darkest-border { border-color: #ba3a52 !important; }
-
-.color-white { color: #FFF; }
-.color-black { color: #000;}
-
-.clear { clear: both ;}
-
-.alert-primary {
-  color: #FFF;
-  background-color: #AD6F3E;
-  border-color: #c4573d;
+a:visited {
+  color: $complementary-dark;
 }
 
-.alert-secondary {
-  color: #000;
-  background-color: #bda740;
-  border-color: #c4953d;
+a:hover {
+  color: $complementary-light;
 }
 
-.alert-info {
-  color: #000;
-  background-color: #c4953d;
-  border-color: #c4573d;
+a:active {
+  color: $danger-color;
 }
 
-.btn-primary {
-  color: #FFF;
-  background-color: #AD6F3E;
-  border-color: #c4573d;
+.form-control {
+  border: 1px solid $shade-darker;
 }
 
-.btn-primary:hover {
-  color: #FFF;
-  background-color: #c4573d;
-  border-color: #ba3a52;
-}
-
-.btn-secondary {
-  color: #000;
-  background-color: #bda740;
-  border-color: #c4953d;
-}
-
-.btn-secondary:hover {
-  color: #000;
-  background-color: #c4953d;
-  border-color: #AD6F3E;
-}
+@import "../node_modules/bootstrap/scss/bootstrap.scss";

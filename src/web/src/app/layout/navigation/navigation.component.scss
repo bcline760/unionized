@@ -1,0 +1,24 @@
+@import "../../../theme/custom.scss";
+
+.main-img {
+  height: 10rem;
+  width: 10rem;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2em;
+
+  background-image: url(../../../assets/main_logo.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.nav-menu {
+
+}
+
+.nav-menu .menu-item {
+  padding: 1rem;
+  font-size: large;
+}
