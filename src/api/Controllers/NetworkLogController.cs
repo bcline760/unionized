@@ -23,5 +23,14 @@ namespace Unionized.Api.Controllers
             var result = await ExecuteServiceMethod<int?,int?,List<NetworkLog>>(svc.GetLogsByPort, port, null, "GetBySourcePortAsync", DesiredStatusCode.OK);
             return result;
         }
+
+        [HttpGet, Route("dstprt/{port}")]
+        public async Task<IActionResult> GetByDestPortAsync(int port)
+        {
+            var svc = (INetworkLogService)Service;
+
+            var result = await ExecuteServiceMethod<int?, int?, List<NetworkLog>>(svc.GetLogsByPort, null, port, "GetBySourcePortAsync", DesiredStatusCode.OK);
+            return result;
+        }
     }
 }

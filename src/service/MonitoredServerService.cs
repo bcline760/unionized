@@ -29,7 +29,7 @@ namespace Unionized.Service
 
         private bool CheckServer(MonitoredServer s)
         {
-            string data = "Fuck Trump";
+            string data = "data";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 10;
 

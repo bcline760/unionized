@@ -8,9 +8,9 @@
 .page .left-column {
   float: left;
   width: 15em;
-  border-right: 3px ridge $shade-darker;
   height: 100vh;
 }
+
 .page .right-column {
   float: right;
   width: calc(100% - 15em);

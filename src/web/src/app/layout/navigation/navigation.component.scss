@@ -1,5 +1,10 @@
 @import "../../../theme/custom.scss";
 
+.nav-container {
+  background-color: $complementary-dark;
+  height: 100vh;
+}
+
 .main-img {
   height: 10rem;
   width: 10rem;
@@ -14,11 +19,26 @@
   background-position: center;
 }
 
-.nav-menu {
-
-}
+.nav-menu {}
 
 .nav-menu .menu-item {
   padding: 1rem;
   font-size: large;
+  color: #FFF;
+}
+
+.nav-menu .menu-item a:link {
+  color: $primary-color;
+}
+
+.nav-menu .menu-item a:hover {
+  color: $complementary-light;
+}
+
+.nav-menu .menu-item a:visited {
+  color: $shade-lighter;
+}
+
+.nav-menu .menu-item a:active {
+  color: $shade-darker;
 }
