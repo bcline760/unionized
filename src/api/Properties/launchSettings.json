@@ -19,8 +19,8 @@
     },
     "Unionized.Api": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchBrowser": false,
+      "launchUrl": "api/check",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

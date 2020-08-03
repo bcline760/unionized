@@ -13,7 +13,7 @@ export class NetworkService extends AppService {
     super(httpService);
   }
 
-  // async getLogsByDateAsync(after: Date | null, before: Date | null):Promise<NetworkLog[]> {
+  // async getLogsByDateAsync(after: Date, before: Date):Promise<NetworkLog[]> {
   // }
 
   /**
@@ -21,16 +21,16 @@ export class NetworkService extends AppService {
    * @param sourcePort The source port to search. Provide null to omit
    * @param destinationPort The destination port number to search. Provide null to omit
    */
-  async getLogsByPort(sourcePort: number | null, destinationPort: number | null): Promise<NetworkLogModel[] | null> {
+  async getLogsByPort(sourcePort?: number, destinationPort?: number): Promise<NetworkLogModel[] | null> {
     let url: string = "/networklog/";
 
     if (sourcePort === null && destinationPort === null) {
       throw new Error('Please provide one of the source port or destination port');
     }
 
-    if (sourcePort !== null) {
+    if (sourcePort) {
       url += `srcprt/${sourcePort}`;
-    } else if (destinationPort !== null) {
+    } else if (destinationPort) {
       url += `dstprt/${destinationPort}`;
     }
 
@@ -38,6 +38,43 @@ export class NetworkService extends AppService {
 
     if (response.success) {
       return response.data;
+    }
+
+    return null;
+  }
+
+  /**
+   * Get logs by a date window
+   * @param after Optional - Query logs after this given date
+   * @param before Optional - query logs before this given date
+   */
+  async getLogsByDateAsync(after?: Date, before?: Date): Promise<NetworkLogModel[] | null> {
+    if (after === null && before === null) {
+      throw new Error('Please provide one or both dates');
+    }
+
+    let request: any = {
+      after: after?.toISOString(),
+      before: before?.toISOString()
+    };
+
+    let queryString = (obj: any) => {
+      let str: string[] = [];
+      for (let p in obj) {
+        if (obj.hasOwnProperty(p) && obj[p]) {
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+        }
+      }
+      return str.join('&');
+    }
+
+    const url: string = `/networklog/logs?${queryString(request)}`;
+    const result: ApiResponse<NetworkLogModel[]> = await this.httpService.getAsync(url);
+
+    if (result.success) {
+      return result.data;
+    } else {
+      console.log(result.message);
     }
 
     return null;

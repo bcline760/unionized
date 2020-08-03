@@ -81,7 +81,7 @@ namespace Unionized.Model.Database.Repository
             {
                 logs = await (
                     from m in Set
-                    where m.LogDate <= after.Value
+                    where m.LogDate <= before.Value
                     select Mapper.Map<NetworkLog>(m)
                     ).ToListAsync();
             }

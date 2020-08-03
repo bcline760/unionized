@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "theme/custom.scss";
 
+@import "../../node_modules/bootstrap/scss/bootstrap.scss"; 
+
 html {
   display: block;
 }
@@ -36,13 +38,14 @@ a:active {
 .window {
   border: 1px solid $primary-color;
   border-radius: 0.5rem;
+  box-shadow: 5px 8px 10px grey;
 }
 
 .window .window-title {
   background: rgb(255, 219, 166);
   background: linear-gradient(180deg, rgba(255, 219, 166, 1) 0%, rgba(209, 171, 115, 1) 35%, rgba(133, 95, 38, 1) 100%);
-  font-size: large;
-  padding: 0.5rem;
+  font-size: larger;
+  padding: 0.25rem;
   border-bottom: 1px solid $shade-darker;
   border-top-right-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
@@ -55,4 +58,3 @@ a:active {
   border-radius: 1rem;
 }
 
-@import "../node_modules/bootstrap/scss/bootstrap.scss";

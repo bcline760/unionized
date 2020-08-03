@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,18 @@ namespace Unionized.Api.Controllers
             var svc = (INetworkLogService)Service;
 
             var result = await ExecuteServiceMethod<int?, int?, List<NetworkLog>>(svc.GetLogsByPort, null, port, "GetBySourcePortAsync", DesiredStatusCode.OK);
+            return result;
+        }
+
+        [HttpGet, Route("logs")]
+        public async Task<IActionResult> GetByDatesAsync(DateTime? after, DateTime? before)
+        {
+            if (after == null && before == null)
+                return BadRequest();
+
+            var svc = (INetworkLogService)Service;
+            var result = await ExecuteServiceMethod(svc.GetLogsByDate, after, before, "GetLogsByDate", DesiredStatusCode.OK);
+
             return result;
         }
     }

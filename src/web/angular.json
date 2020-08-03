@@ -49,10 +49,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/theme/custom.scss",
+              "node_modules/datatables.net-dt/css/jquery.dataTables.css",
               "src/styles.scss"
             ],
             "scripts": [
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/datatables.net/js/jquery.dataTables.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {

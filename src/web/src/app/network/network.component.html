@@ -1,0 +1,48 @@
+<div class="network-page mt-3">
+    <div class="content">
+        <div class="page-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore
+            magna
+            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+            sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+        <div class="window mt-4">
+            <div class="window-title">
+                Network Logs
+            </div>
+            <div class="window-body">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                    class="table table-bordered row-border hover">
+                    <thead>
+                        <tr>
+                            <td>Date</td>
+                            <td>Source Address</td>
+                            <td>Destination Address</td>
+                            <td>Source Port</td>
+                            <td>Destination Port</td>
+                            <td>Protocol</td>
+                            <td>Packet Length</td>
+                            <td>TCP Action</td>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="this.model !== null && this.model.logs !== null">
+                        <tr *ngFor="let log of this.model.logs">
+                            <td>{{log.logDate}}</td>
+                            <td>{{log.sourceAddress}}</td>
+                            <td>{{log.destinationAddress}}</td>
+                            <td>{{log.sourcePort}}</td>
+                            <td>{{log.destinationPort}}</td>
+                            <td>{{log.protocol}}</td>
+                            <td>{{log.packetLength}}</td>
+                            <td>{{log.tcpAction}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

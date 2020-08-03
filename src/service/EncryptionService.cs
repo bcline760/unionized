@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -16,18 +17,10 @@ namespace Unionized.Service
 {
     public class EncryptionService : IEncryptionService
     {
-        public EncryptionService()
+        public UnionizedConfiguration Configuration { get; private set; }
+        public EncryptionService(UnionizedConfiguration config)
         {
-        }
-
-        public T Decrypt<T>(byte[] encryptedData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] Encrypt<T>(T obj)
-        {
-            throw new NotImplementedException();
+            Configuration = config;
         }
 
         public byte[] GeneratePasswordHash(string plainText)

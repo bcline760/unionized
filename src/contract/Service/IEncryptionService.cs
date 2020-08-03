@@ -7,23 +7,6 @@ namespace Unionized.Contract.Service
     public interface IEncryptionService
     {
         /// <summary>
-        /// Encrypt the specified obj.
-        /// </summary>
-        /// <returns>The encrypted data</returns>
-        /// <param name="obj">Generic object which to encrypt. If an object, must be serializable</param>
-        /// <typeparam name="T">The type of object to encrypt</typeparam>
-        byte[] Encrypt<T>(T obj);
-
-        /// <summary>
-        /// Decrypt data
-        /// </summary>
-        /// <returns>The decrypted object</returns>
-        /// <param name="encryptedData">Encrypted data.</param>
-        /// <typeparam name="T">The type of object to decrypt</typeparam>
-        T Decrypt<T>(byte[] encryptedData);
-
-
-        /// <summary>
         /// Verifies the password hash using PBDKF2.
         /// </summary>
         /// <returns><c>true</c>, if password hash was verified, <c>false</c> otherwise.</returns>
