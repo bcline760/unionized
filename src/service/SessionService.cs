@@ -11,12 +11,12 @@ namespace Unionized.Service
 {
     internal class SessionService : ISessionService
     {
-        private readonly ILdap _ldap = null;
+        private readonly ILdapService _ldap = null;
         private readonly UnionizedConfiguration _config = null;
         private readonly ITokenService _tokenSvc = null;
         private readonly IRoleRepository _roleRepo = null;
 
-        public SessionService(ILdap ldap, IRoleRepository role,
+        public SessionService(ILdapService ldap, IRoleRepository role,
             ITokenService tokenSvc, UnionizedConfiguration config)
         {
             _ldap = ldap;

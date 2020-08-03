@@ -9,7 +9,7 @@ namespace Unionized.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Ldap>().As<ILdap>().InstancePerLifetimeScope();
+            builder.RegisterType<LdapService>().As<ILdapService>().InstancePerLifetimeScope();
             builder.RegisterType<SessionService>().As<ISessionService>().InstancePerLifetimeScope();
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();

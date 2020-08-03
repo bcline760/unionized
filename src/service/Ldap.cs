@@ -8,7 +8,7 @@ using Novell.Directory.Ldap;
 
 namespace Unionized.Service
 { 
-    public class Ldap : ILdap
+    public class LdapService : ILdapService
     {
         private readonly string[] _attributes = {
         "objectSid", "objectGUID", "objectCategory", "objectClass", "memberOf", "name", "cn", "distinguishedName",
@@ -16,7 +16,7 @@ namespace Unionized.Service
         "telephoneNumber", "mail", "streetAddress", "postalCode", "l", "st", "co", "c"
         };
 
-        public Ldap(UnionizedConfiguration config)
+        public LdapService(UnionizedConfiguration config)
         {
             Configuration = config;
             Connection = GetConnection();
@@ -24,8 +24,8 @@ namespace Unionized.Service
 
         public bool ValidateDirectoryUser(string username, string password)
         {
-            bool isValid = false;
             string dn = $"{username}@unionsquared.lan";
+            bool isValid;
             try
             {
                 Connection.Bind(dn, password);
@@ -62,10 +62,6 @@ namespace Unionized.Service
             };
 
             connection.Connect(Configuration.LdapSettings.ServerName, LdapConnection.DEFAULT_PORT);
-            //connection.Bind(Configuration.ServiceAccount.Name, Configuration.ServiceAccount.Password);
-
-            //if (!connection.Bound)
-            //    throw new LdapException();
 
             return connection;
         }
