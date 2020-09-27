@@ -1,105 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
+using MongoDB.Driver;
 
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 using Unionized.Contract;
 using Unionized.Contract.Repository;
-using Unionized.Model.Database.Context;
 
 namespace Unionized.Model.Database.Repository
 {
     internal sealed class NetworkLogRepository : UnionizedRepository<NetworkLog, NetworkLogModel>, INetworkLogRepository
     {
-        public NetworkLogRepository(IUnionizedContext context, IMapper mapper) : base(context, mapper)
+        public NetworkLogRepository(IMongoDatabase context, IMapper mapper) : base(context, mapper)
         {
         }
 
         public async Task<List<NetworkLog>> GetBySourceAddressAsync(string srcAddr)
         {
-            var destinations = await (
-                from m in Set
-                where m.DestinationAddress == srcAddr
-                select Mapper.Map<NetworkLog>(m)
-                ).ToListAsync();
-
-            return destinations;
+            return await GetLogsAsync("src_address", srcAddr);
         }
 
         public async Task<List<NetworkLog>> GetByDestinationAddressAsync(string destAddr)
         {
-            var destinations = await (
-                from m in Set
-                where m.DestinationAddress == destAddr
-                select Mapper.Map<NetworkLog>(m)
-                ).ToListAsync();
-
-            return destinations;
+            return await GetLogsAsync("dst_address", destAddr);
         }
 
         public async Task<List<NetworkLog>> GetByDestinationPortAsync(int port)
         {
-            var destinations = await (
-                from m in Set
-                where m.DestinationPort == port
-                select Mapper.Map<NetworkLog>(m)
-                ).ToListAsync();
-
-            return destinations;
+            return await GetLogsAsync("dst_port", port.ToString());
         }
 
         public async Task<List<NetworkLog>> GetBySourcePortAsync(int port)
         {
-            var destinations = await (
-                from m in Set
-                where m.SourcePort == port
-                select Mapper.Map<NetworkLog>(m)
-                ).ToListAsync();
-
-            return destinations;
+            return await GetLogsAsync("src_port", port.ToString());
         }
 
         public async Task<List<NetworkLog>> GetByDateRangeAsync(DateTime? after, DateTime? before)
         {
-            if (!after.HasValue && !before.HasValue)
-                throw new ArgumentException("Must provide both a before and after");
+            FilterDefinition<NetworkLogModel> filter = null;
 
-            List<NetworkLog> logs = null;
-
-            if (after.HasValue && !before.HasValue)
+            if (after.HasValue && before.HasValue)
             {
-                logs = await (
-                    from m in Set
-                    where m.LogDate >= after.Value
-                    select Mapper.Map<NetworkLog>(m)
-                    ).ToListAsync();
+                var gtFilter = Builders<NetworkLogModel>.Filter.Gte("log_date", after.Value);
+                var ltFilter = Builders<NetworkLogModel>.Filter.Lt("log_date", before.Value);
+
+                filter = Builders<NetworkLogModel>.Filter.And(gtFilter, ltFilter);
             }
             else if (!after.HasValue && before.HasValue)
             {
-                logs = await (
-                    from m in Set
-                    where m.LogDate <= before.Value
-                    select Mapper.Map<NetworkLog>(m)
-                    ).ToListAsync();
+                filter = Builders<NetworkLogModel>.Filter.Lt("log_date", before.Value);
             }
-            else if (after.HasValue && before.HasValue)
+            else if (after.HasValue && !before.HasValue)
             {
-                logs = await (
-                    from m in Set
-                    where m.LogDate >= after.Value && m.LogDate <= before.Value
-                    select Mapper.Map<NetworkLog>(m)
-                    ).ToListAsync();
+                filter = Builders<NetworkLogModel>.Filter.Gte("log_date", after.Value);
+            }
+            else
+                throw new ArgumentException("Must supply an after or before argument");
+
+            return await GetLogsAsync(filter);
+        }
+
+        private async Task<List<NetworkLog>> GetLogsAsync(string field, string fieldValue)
+        {
+            var filter = Builders<NetworkLogModel>.Filter.Eq(field, fieldValue);
+            return await GetLogsAsync(filter);
+        }
+
+        private async Task<List<NetworkLog>> GetLogsAsync(FilterDefinition<NetworkLogModel> filter)
+        {
+            var result = await Collection.FindAsync(filter);
+
+            List<NetworkLog> logs = new List<NetworkLog>();
+            if (result.Any())
+            {
+                var docs = await result.ToListAsync();
+                logs.AddRange(Mapper.Map<List<NetworkLog>>(docs));
             }
 
             return logs;
-        }
-
-        public override Task<int> UpdateAsync(NetworkLog entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

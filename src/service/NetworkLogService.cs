@@ -57,7 +57,7 @@ namespace Unionized.Service
             return logs;
         }
 
-        public async Task<int> SaveLog(string logText)
+        public async Task SaveLog(string logText)
         {
             int identifierPos = logText.IndexOf("MainGateway");
 
@@ -102,9 +102,7 @@ namespace Unionized.Service
             if (dict.ContainsKey("ICMP"))
                 netLog.IcmpSequence = int.Parse(dict["ICMP"]);
 
-            int recordsModified = await Repository.CreateAsync(netLog);
-
-            return recordsModified;
+            await Repository.SaveAsync(netLog);
         }
     }
 }

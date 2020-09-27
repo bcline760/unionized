@@ -21,17 +21,14 @@ namespace Unionized.Service
             Repository = repo;
         }
 
-        public async Task<int> DeleteAsync(string slug)
+        public async Task DeleteAsync(string slug)
         {
-            return await Repository.DeleteAsync(slug);
+            await Repository.DeleteAsync(slug);
         }
 
-        public async Task<int> SaveAsync(TEntity entity)
+        public async Task SaveAsync(TEntity entity)
         {
-            if (string.IsNullOrEmpty(entity.Slug))
-                return await Repository.CreateAsync(entity);
-
-            return await Repository.UpdateAsync(entity);
+            await Repository.SaveAsync(entity);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()

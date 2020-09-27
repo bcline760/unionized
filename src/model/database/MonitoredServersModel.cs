@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace Unionized.Model.Database
 {
-    [Table("monitored_servers")]
-    public class MonitoredServersModel : UnionizedModel
+    public sealed class MonitoredServersModel : UnionizedModel
     {
-        [Column("hostname")]
+        [BsonElement, BsonRequired]
         public string HostName { get; set; }
 
-        [Column("ip_address")]
+        [BsonElement, BsonRequired]
         public string IpAddress { get; set; }
     }
 }

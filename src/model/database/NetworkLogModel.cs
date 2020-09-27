@@ -1,53 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Unionized.Model.Database
 {
-    [Table("network_log")]
     public class NetworkLogModel : UnionizedModel
     {
-        [Column("log_date"), Required]
+        [BsonElement, BsonRequired]
         public DateTime LogDate { get; set; }
 
-        [Column("rule"), Required]
+        [BsonElement, BsonRequired]
         public string Rule { get; set; }
 
-        [Column("iface_in")]
+        [BsonElement]
         public string InterfaceIn { get; set; }
 
-        [Column("iface_out")]
+        [BsonElement]
         public string InterfaceOut { get; set; }
 
-        [Column("mac_address"), Required]
+        [BsonElement, BsonRequired]
         public string MacAddress { get; set; }
 
-        [Column("src_address"), Required]
+        [BsonElement, BsonRequired]
         public string SourceAddress { get; set; }
 
-        [Column("dst_address"), Required]
+        [BsonElement, BsonRequired]
         public string DestinationAddress { get; set; }
 
-        [Column("packet_len"), Required]
+        [BsonElement, BsonRequired]
         public int PacketLength { get; set; }
 
-        [Column("ttl"), Required]
+        [BsonElement, BsonRequired]
         public int TimeToLive { get; set; }
 
-        [Column("protocol"), Required]
+        [BsonElement, BsonRequired]
         public string Protocol { get; set; }
 
-        [Column("src_port")]
+        [BsonElement]
         public int? SourcePort { get; set; }
 
-        [Column("dst_port")]
+        [BsonElement]
         public int? DestinationPort { get; set; }
 
-        [Column("tcp_action")]
+        [BsonElement]
         public string TcpAction { get; set; }
 
-        [Column("icmp_sequence")]
+        [BsonElement]
         public int? IcmpSequence { get; set; }
     }
 }

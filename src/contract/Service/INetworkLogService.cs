@@ -37,6 +37,6 @@ namespace Unionized.Contract.Service
         /// </summary>
         /// <param name="logText">The raw log text coming from the gateway</param>
         /// <returns>The number of rows returned</returns>
-        Task<int> SaveLog(string logText);
+        Task SaveLog(string logText);
     }
 }

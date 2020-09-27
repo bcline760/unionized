@@ -1,21 +1,18 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Unionized.Model.Database
 {
-    [Table("user_token")]
-    public class UserTokenModel : UnionizedModel
+    public sealed class UserTokenModel : UnionizedModel
     {
-        [Column("token"), Required]
+        [BsonElement, BsonRequired]
         public string TokenString { get; set; }
 
-        [Column("expiry"), Required]
+        [BsonElement, BsonRequired]
         public DateTime TokenExpiry { get; set; }
 
-        [Column("generated_by"), Required]
+        [BsonElement, BsonRequired]
         public string GeneratedBy { get; set; }
     }
 }

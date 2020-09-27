@@ -9,7 +9,7 @@ using Unionized.Contract.Service;
 namespace Unionized.Api.Controllers
 {
     public abstract class UnionizedDataController<TContract> : UnionizedController
-        where TContract:UnionizedEntity
+        where TContract : UnionizedEntity
     {
         protected IUnionizedService<TContract> Service { get; private set; }
         protected UnionizedDataController(IUnionizedService<TContract> service)
@@ -17,7 +17,7 @@ namespace Unionized.Api.Controllers
             Service = service;
         }
 
-        [HttpGet,Route("")]
+        [HttpGet, Route("")]
         public virtual async Task<IActionResult> GetAllAsync()
         {
             var result = await ExecuteServiceMethod(Service.GetAllAsync, "GetAllAsync", DesiredStatusCode.OK);
@@ -33,28 +33,55 @@ namespace Unionized.Api.Controllers
             return result;
         }
 
-        [HttpPost,Route("")]
+        [HttpPost, Route("")]
         public virtual async Task<IActionResult> PostAsync(TContract contract)
         {
-            var result = await ExecuteServiceMethod(Service.SaveAsync, contract, "PostAsync", DesiredStatusCode.Created);
+            IActionResult result = null;
 
+            ApiResponse<string> apiResponse = new ApiResponse<string>
+            {
+                Success = false
+            };
+
+            try
+            {
+                await Service.SaveAsync(contract);
+
+                result = CreatedAtAction("SaveAsync", apiResponse);
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = $"Failed to execute service operation SaveAsync.";
+                result = BadRequest(apiResponse);
+            }
             return result;
         }
 
         [HttpDelete, Route("")]
         public virtual async Task<IActionResult> DeleteAsync(string slug)
         {
-            var contract = await Service.GetAsync(slug);
-            if (contract!=null)
-            {
-                contract.Active = false;
-                contract.UpdatedAt = DateTime.Now;
+            IActionResult result = null;
 
-                var result = await ExecuteServiceMethod(Service.SaveAsync, contract, "DeleteAsync", DesiredStatusCode.Created);
-                return result;
+            ApiResponse<string> apiResponse = new ApiResponse<string>
+            {
+                Success = false
+            };
+
+            try
+            {
+                await Service.DeleteAsync(slug);
+
+                result = Ok();
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = $"Failed to execute service operation DeleteAsync.";
+                result = BadRequest(apiResponse);
             }
 
-            return NotFound();
+            return result;
         }
     }
 }

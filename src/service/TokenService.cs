@@ -77,7 +77,7 @@ namespace Unionized.Service
                 Active = true
             };
 
-            int recordsModified = await SaveAsync(userToken);
+            await SaveAsync(userToken);
 
             return userToken;
         }

@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+using MongoDB.Driver;
 
 using Unionized.Contract;
 using Unionized.Contract.Repository;
 using Unionized.Model;
-using Unionized.Model.Database.Context;
 
 using AutoMapper;
 
@@ -22,78 +23,106 @@ namespace Unionized.Model.Database.Repository
         where TEntity : UnionizedEntity
         where TModel : UnionizedModel
     {
-        protected IUnionizedContext Context { get; }
-
-        protected DbSet<TModel> Set { get;  }
+        protected IMongoCollection<TModel> Collection { get; }
 
         protected IMapper Mapper { get; }
 
-        protected UnionizedRepository(IUnionizedContext context, IMapper mapper)
+        protected UnionizedRepository(IMongoDatabase context, IMapper mapper)
         {
-            Context = context;
-            Set = Context.DatabaseContext.Set<TModel>();
+            string collectionName = GetCollectionName();
+            Collection = context.GetCollection<TModel>(collectionName);
             Mapper = mapper;
         }
 
-        public async Task<int> CreateAsync(TEntity entity)
+        public virtual async Task DeleteAsync(string slug)
+        {
+            var record = await GetAsync(slug);
+
+            if (record != null)
+            {
+                record.Active = false;
+                record.UpdatedAt = DateTime.Now;
+
+                await SaveAsync(record);
+            }
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            var filter = Builders<TModel>.Filter.Empty;
+            var collection = await Collection.FindAsync(filter);
+            List<TEntity> entities = new List<TEntity>();
+
+            if (collection.Any())
+            {
+                var models = await collection.ToListAsync();
+                entities.AddRange(Mapper.Map<List<TEntity>>(models));
+            }
+
+            return entities;
+        }
+
+        public virtual async Task<TEntity> GetAsync(string slug)
+        {
+            var filter = Builders<TModel>.Filter.Eq("slug", slug);
+            var result = await Collection.FindAsync(filter);
+
+            if (result.Any())
+            {
+                var doc = await result.FirstAsync();
+                var map = Mapper.Map<TEntity>(doc);
+
+                return map;
+            }
+
+            return null;
+        }
+
+        public virtual async Task SaveAsync(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             if (string.IsNullOrEmpty(entity.Slug))
                 entity.Slugify();
-            
+
             var model = Mapper.Map<TModel>(entity);
-            Set.Attach(model).State = Microsoft.EntityFrameworkCore.EntityState.Added;
-
-            int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
-            return recordsModified;
+            var filter = Builders<TModel>.Filter.Eq("slug", model.Slug);
+            var result = await Collection.ReplaceOneAsync(filter, model, new ReplaceOptions { IsUpsert = true });
         }
 
-        public async Task<int> DeleteAsync(string slug)
+        /// <summary>
+        /// Get the name of the collection based off the model. Will appropriatly pluralize
+        /// </summary>
+        /// <typeparam name="TModel">The type of the model to use</typeparam>
+        /// <returns>The name of the collection</returns>
+        protected string GetCollectionName()
         {
-            var model = await Set.FirstOrDefaultAsync(s => s.Slug == slug);
+            Type modelType = typeof(TModel);
+            string modelName = modelType.Name.Replace("Model", string.Empty);
+            string collectionName = string.Empty;
+            char endingCharacter = modelName[modelName.Length - 1];
 
-            if (model != null)
+            //Be smart about English
+            if (char.ToLowerInvariant(endingCharacter) == 'y')
             {
-                model.Active = false;
-                model.UpdatedAt = DateTime.Now;
-
-                int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
-                return recordsModified;
+                char nextChar = modelName[modelName.Length - 2];
+                char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
+                if (vowels.Any(v => v == nextChar))
+                    collectionName = string.Concat(modelName, 's'); //bays, toys, keys
+                else
+                    collectionName = string.Concat(modelName.Substring(0, modelName.Length - 2), "ies"); //histories, flies, countries, etc.
             }
+            else if (char.ToLowerInvariant(endingCharacter) == 'o') //Gonna have the odd case here...pianoes
+            {
+                collectionName = string.Concat(modelName, "es");
+            }
+            else
+                collectionName = string.Concat(modelName, 's'); //Bows, Arrows
 
-            return 0;
+            Regex s_seperateWordRegex =
+                            new Regex(@"(?<=[A-Z])(?=[A-Z][a-z]) | (?<=[^A-Z])(?=[A-Z]) | (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
+            return collectionName.ToLowerInvariant();
         }
-
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
-        {
-            var modelList = await Set.ToListAsync<TModel>();
-
-            return modelList.Select(Mapper.Map<TEntity>).ToList();
-        }
-
-        public async Task<TEntity> GetAsync(string slug)
-        {
-            var model = await Set.FirstOrDefaultAsync(s => s.Slug == slug);
-            if (model != null)
-                return Mapper.Map<TEntity>(model);
-
-            return null;
-        }
-
-        public abstract Task<int> UpdateAsync(TEntity entity);
-        //{
-        //    if (entity == null)
-        //        throw new ArgumentNullException(nameof(entity));
-
-        //    var model = Mapper.Map<TModel>(entity);
-        //    var dbEntity = await Context.DatabaseContext.FindAsync<TModel>(model.ID);
-        //    Context.DatabaseContext.Entry(dbEntity).State = EntityState.Detached;
-
-        //    Set.Attach(model);
-        //    int recordsModified = await Context.DatabaseContext.SaveChangesAsync();
-        //    return recordsModified;
-        //}
     }
 }

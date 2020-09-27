@@ -14,14 +14,14 @@ namespace Unionized.Contract.Service
         /// </summary>
         /// <param name="slug">The slug of the entity to delete</param>
         /// <returns>Number of records deleted</returns>
-        Task<int> DeleteAsync(string slug);
+        Task DeleteAsync(string slug);
 
         /// <summary>
         /// Save an entity to the data store
         /// </summary>
         /// <param name="entity">The entity to save</param>
         /// <returns>Number of records saved to the data store</returns>
-        Task<int> SaveAsync(TEntity entity);
+        Task SaveAsync(TEntity entity);
 
         /// <summary>
         /// Gets all entities in the data store. This could be a resource intensive operation

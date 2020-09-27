@@ -1,23 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace Unionized.Model.Database
 {
+    [BsonIgnoreExtraElements, BsonDiscriminator(RootClass = true)]
+    [BsonKnownTypes(typeof(NetworkLogModel), typeof(UserTokenModel), typeof(MonitoredServersModel))]
     public abstract class UnionizedModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long ID { get; set; }
-        [Column("slug"), Required]
+        [BsonIgnoreIfDefault, BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string Id { get; set; }
+
+        [BsonElement, BsonRequired]
         public string Slug { get; set; }
-        [Column("created_at"), Required]
+
+        [BsonElement, BsonRequired]
         public DateTime CreatedAt { get; set; }
-        [Column("updated_at")]
+
+        [BsonElement]
         public DateTime? UpdatedAt { get; set; }
-        [Column("active", TypeName = "bit"), Required]
+
+        [BsonElement, BsonRequired]
         public bool Active { get; set; }
     }
 }
