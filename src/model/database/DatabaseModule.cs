@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.Web;
 
 using Autofac;
 using AutoMapper;
+using MongoDB.Driver;
 
 using Unionized.Contract;
 using Unionized.Contract.Repository;
@@ -26,6 +27,17 @@ namespace Unionized.Model.Database
 
                 return map;
             }).As<IMapper>().SingleInstance();
+
+            builder.Register(r =>
+            {
+                var config = r.Resolve<UnionizedConfiguration>();
+                var connectString = config.ConnectionString.Replace("<password>", HttpUtility.UrlEncode(config.ServiceAccount.Password));
+
+                var settings = MongoClientSettings.FromUrl(MongoUrl.Create(connectString));
+                var client = new MongoClient(settings);
+                IMongoDatabase db = client.GetDatabase("unionized"); //TODO: Not hardcode
+                return db;
+            }).As<IMongoDatabase>().SingleInstance();
 
             builder.RegisterType<NetworkLogRepository>().As<INetworkLogRepository>().InstancePerLifetimeScope();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().InstancePerLifetimeScope();

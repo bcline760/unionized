@@ -14,15 +14,13 @@ namespace Unionized.Service
         private readonly ILdapService _ldap = null;
         private readonly UnionizedConfiguration _config = null;
         private readonly ITokenService _tokenSvc = null;
-        private readonly IRoleRepository _roleRepo = null;
 
-        public SessionService(ILdapService ldap, IRoleRepository role,
+        public SessionService(ILdapService ldap,
             ITokenService tokenSvc, UnionizedConfiguration config)
         {
             _ldap = ldap;
             _tokenSvc = tokenSvc;
             _config = config;
-            _roleRepo = role;
         }
 
         public async Task<LogonResponse> AuthenticateAsync(LogonRequest request)
@@ -50,7 +48,7 @@ namespace Unionized.Service
             //Invalidate any old tokens
             await _tokenSvc.InvalidateUserTokens(request.Username);
             DateTime expiration = request.Persist ? DateTime.MaxValue : DateTime.Now.AddHours(6);
-            RoleType role = await GetRoleFromGroups(ldapUser.MemberOf);
+            RoleType role = GetRoleFromGroups(ldapUser.MemberOf);
 
             var tokenRequest = new TokenRequest
             {
@@ -103,7 +101,7 @@ namespace Unionized.Service
         }
 
         //CN=SG_Unionized_Admin,CN=Users,DC=unionsquared,DC=lan
-        private async Task<RoleType> GetRoleFromGroups(string[] userGroups)
+        private RoleType GetRoleFromGroups(string[] userGroups)
         {
             if (userGroups.Length == 0)
                 return RoleType.Nobody;
@@ -114,12 +112,10 @@ namespace Unionized.Service
                 s = item.Substring(0, item.IndexOf(','));
                 s = s.Replace("CN=", string.Empty);
 
-                var role = await _roleRepo.GetBySecurityGroup(s);
-
-                if (role != null)
-                {
-                    return role.Role;
-                }
+                if (s.Contains(RoleType.Admin.ToString()))
+                    return RoleType.Admin;
+                else if (s.Contains(RoleType.User.ToString()))
+                    return RoleType.User;
             }
 
             return RoleType.Nobody;

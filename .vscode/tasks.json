@@ -5,6 +5,10 @@
             "label": "build",
             "command": "dotnet",
             "type": "process",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "args": [
                 "build",
                 "${workspaceFolder}/src/api/Unionized.Api.csproj",
@@ -42,17 +46,9 @@
             "type": "npm",
             "script": "build",
             "path": "src/web/ClientApp/",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
             "problemMatcher": [],
             "label": "npm: build - src/web/ClientApp",
             "detail": "ng build"
-        },
-        {
-            "type": "shell",
-            "detail": ""
         }
     ]
 }
