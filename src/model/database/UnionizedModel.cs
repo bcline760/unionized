@@ -1,5 +1,6 @@
 ﻿using System;
 
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 
@@ -9,19 +10,20 @@ namespace Unionized.Model.Database
     [BsonKnownTypes(typeof(NetworkLogModel), typeof(UserTokenModel), typeof(MonitoredServersModel))]
     public abstract class UnionizedModel
     {
+        [BsonRepresentation(BsonType.ObjectId)]
         [BsonIgnoreIfDefault, BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string Id { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("slug"), BsonRequired]
         public string Slug { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("created_at"), BsonRequired, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CreatedAt { get; set; }
 
-        [BsonElement]
+        [BsonElement("updated_at"), BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime? UpdatedAt { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("active"), BsonRequired]
         public bool Active { get; set; }
     }
 }

@@ -6,13 +6,13 @@ namespace Unionized.Model.Database
 {
     public sealed class UserTokenModel : UnionizedModel
     {
-        [BsonElement, BsonRequired]
+        [BsonElement("token"), BsonRequired]
         public string TokenString { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("expiry"), BsonRequired]
         public DateTime TokenExpiry { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("genBy"), BsonRequired]
         public string GeneratedBy { get; set; }
     }
 }

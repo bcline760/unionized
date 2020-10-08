@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Login } from './login.model';
 import { SessionService } from 'src/app/service/session.service';
 import { LoadingService } from 'src/app/service/loading.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private session: SessionService,
     private loading: LoadingService,
     private router: Router,
+    private jwtService: JwtHelperService,
     private activatedRoute: ActivatedRoute) {
     if (this.model === null) {
       this.model = new Login();
@@ -34,6 +36,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.redirectRoute = s['redirect'];
       }
     });
+
+    // Check to see if there is a latent token and remove it.
+    // If it is not expired, redirect to either the given URL or home URL
+    if (this.jwtService.isTokenExpired()) {
+      localStorage.removeItem("access_token");
+    } else {
+      if (this.redirectRoute) {
+        this.router.navigateByUrl(this.redirectRoute);
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    }
   }
 
   async loginAsync(): Promise<void> {

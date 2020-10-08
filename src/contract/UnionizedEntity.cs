@@ -7,12 +7,6 @@ namespace Unionized.Contract
     [KnownType(typeof(UserToken)), KnownType(typeof(MonitoredServer)), KnownType(typeof(NetworkLog))]
     public abstract class UnionizedEntity : ISluggable
     {
-        /// <summary>
-        /// The Prim
-        /// </summary>
-        [IgnoreDataMember]
-        public long ID { get; set; }
-
         [DataMember]
         public string Slug { get; set; }
 

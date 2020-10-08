@@ -19,11 +19,10 @@ namespace Unionized.Model.Database.Repository
 
         public async Task<List<UserToken>> GetByUserAsync(string userSlug)
         {
-            var filter = Builders<UserTokenModel>.Filter.Eq("generated_by", userSlug);
-            var result = await Collection.FindAsync(filter);
-
             List<UserToken> tokens = new List<UserToken>();
-            if (result.Any())
+            var filter = Builders<UserTokenModel>.Filter.Eq("genBy", userSlug);
+
+            using (var result = await Collection.FindAsync(filter))
             {
                 var docs = await result.ToListAsync();
                 tokens.AddRange(Mapper.Map<List<UserToken>>(docs));

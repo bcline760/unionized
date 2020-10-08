@@ -6,46 +6,46 @@ namespace Unionized.Model.Database
 {
     public class NetworkLogModel : UnionizedModel
     {
-        [BsonElement, BsonRequired]
+        [BsonElement("logDate"), BsonRequired]
         public DateTime LogDate { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("rule"), BsonRequired]
         public string Rule { get; set; }
 
-        [BsonElement]
+        [BsonElement("ifaceIn")]
         public string InterfaceIn { get; set; }
 
-        [BsonElement]
+        [BsonElement("ifaceOut")]
         public string InterfaceOut { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("macAddr"), BsonRequired]
         public string MacAddress { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("sAddr"), BsonRequired]
         public string SourceAddress { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("dAddr"), BsonRequired]
         public string DestinationAddress { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("pLen"), BsonRequired]
         public int PacketLength { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("ttl"), BsonRequired]
         public int TimeToLive { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("proto"), BsonRequired]
         public string Protocol { get; set; }
 
-        [BsonElement]
+        [BsonElement("sPrt")]
         public int? SourcePort { get; set; }
 
-        [BsonElement]
+        [BsonElement("dPrt")]
         public int? DestinationPort { get; set; }
 
-        [BsonElement]
+        [BsonElement("tcp")]
         public string TcpAction { get; set; }
 
-        [BsonElement]
+        [BsonElement("icmpSeq")]
         public int? IcmpSequence { get; set; }
     }
 }

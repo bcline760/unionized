@@ -49,11 +49,9 @@ namespace Unionized.Model.Database.Repository
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            var filter = Builders<TModel>.Filter.Empty;
-            var collection = await Collection.FindAsync(filter);
             List<TEntity> entities = new List<TEntity>();
-
-            if (collection.Any())
+            var filter = Builders<TModel>.Filter.Empty;
+            using (var collection = await Collection.FindAsync(filter))
             {
                 var models = await collection.ToListAsync();
                 entities.AddRange(Mapper.Map<List<TEntity>>(models));
@@ -65,17 +63,13 @@ namespace Unionized.Model.Database.Repository
         public virtual async Task<TEntity> GetAsync(string slug)
         {
             var filter = Builders<TModel>.Filter.Eq("slug", slug);
-            var result = await Collection.FindAsync(filter);
-
-            if (result.Any())
+            using (var result = await Collection.FindAsync(filter))
             {
-                var doc = await result.FirstAsync();
+                var doc = await result.FirstOrDefaultAsync();
                 var map = Mapper.Map<TEntity>(doc);
 
                 return map;
             }
-
-            return null;
         }
 
         public virtual async Task SaveAsync(TEntity entity)

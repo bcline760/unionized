@@ -25,7 +25,7 @@ namespace Unionized.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost,Route("login")]
+        [HttpPost, Route("login")]
         public async Task<IActionResult> LoginAsync(LogonRequest request)
         {
             if (request == null)
@@ -34,17 +34,17 @@ namespace Unionized.Api.Controllers
             try
             {
                 var logonResponse = await _session.AuthenticateAsync(request);
-                
+
                 return Ok(logonResponse);
             }
             catch (Exception ex)
             {
                 //TODO: Log exception
-                return StatusCode(500, null);
+                return StatusCode(500, ex);
             }
         }
 
-        [HttpGet,Route("logout")]
+        [HttpGet, Route("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
             var claims = HttpContext.User;

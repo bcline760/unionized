@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class HttpClientService {
 
@@ -15,12 +15,12 @@ export class HttpClientService {
         return await this._executeHttpMethod(url, "GET");
     }
 
-    async putAsync<R, B>(url: string, body: B):Promise<R> {
-        return await this._executeHttpMethod(url, "PUT",body);
+    async putAsync<R, B>(url: string, body: B): Promise<R> {
+        return await this._executeHttpMethod(url, "PUT", body);
     }
 
     async postAsync<R, B>(url: string, body: B): Promise<R> {
-        return await this._executeHttpMethod(url,"POST",body);
+        return await this._executeHttpMethod(url, "POST", body);
     }
 
     ///Delete data from the webserver
@@ -28,15 +28,25 @@ export class HttpClientService {
         return await this._executeHttpMethod(url, "DELETE");
     }
 
-    private async _executeHttpMethod<R, B>(url: string, method: "GET" | "PUT" | "POST"| "DELETE",  body?: B): Promise<R> {
+    private async _executeHttpMethod<R, B>(url: string, method: "GET" | "PUT" | "POST" | "DELETE", body?: B): Promise<R> {
         const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
+            headers: {}
         };
 
-        const requestUrl=`https://${environment.domain}/api${url}`;
-        let data:R;
+        const token: string | null = localStorage.getItem("access_token");
+        if (token) {
+            httpOptions.headers = new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            });
+        } else {
+            httpOptions.headers = new HttpHeaders({
+                'Content-Type': 'application/json'
+            });
+        }
+
+        const requestUrl = `https://${environment.domain}/api${url}`;
+        let data: R;
         switch (method) {
             case "GET":
                 data = await this.http.get<R>(requestUrl, httpOptions).toPromise();
@@ -48,7 +58,7 @@ export class HttpClientService {
                 data = await this.http.post<R>(requestUrl, body, httpOptions).toPromise();
                 break;
             case "DELETE":
-                data = await this.http.delete<R>(requestUrl,httpOptions).toPromise();
+                data = await this.http.delete<R>(requestUrl, httpOptions).toPromise();
                 break;
         }
 

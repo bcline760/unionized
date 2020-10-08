@@ -4,10 +4,10 @@ namespace Unionized.Model.Database
 {
     public sealed class MonitoredServersModel : UnionizedModel
     {
-        [BsonElement, BsonRequired]
+        [BsonElement("host"), BsonRequired]
         public string HostName { get; set; }
 
-        [BsonElement, BsonRequired]
+        [BsonElement("ipAddr"), BsonRequired]
         public string IpAddress { get; set; }
     }
 }
