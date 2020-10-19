@@ -6,7 +6,7 @@ node {
         withCredentials([
             usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'username', passwordVariable: 'password')
         ]) {
-            sh(script: "docker login ${api_registry_url} -u ${username} -p ${password}")
+            sh(script: "docker login ${registry_url} -u ${username} -p ${password}")
             sh "docker build -t unionized-api:${version} -f Dockerfile"
         }
     }
