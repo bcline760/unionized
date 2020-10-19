@@ -1,16 +1,12 @@
 version = "1.0.${BUILD_NUMBER}"
 
 node {
-    stage ('Build Image') {
+    stage ('Build image') {
         checkout scm
         withCredentials([
             usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'username', passwordVariable: 'password')
         ]) {
-            sh(script: "docker login ${registry_url} -u ${username} -p ${password}")
-            sh "docker build -t unionized-api:${version} -f Dockerfile"
+            sh(script: "bash build.sh -p ${password} -r ${registry_url} -u ${username} -v ${version}", returnStdout: true)
         }
-    }
-    stage ('Push to Docker Hub') {
-        sh "docker push unionized-api:${version}"
     }
 }
