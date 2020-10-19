@@ -1,0 +1,14 @@
+pipeline {
+    stage ('Build Image') {
+        steps {
+            version = "1.0.${BUILD_NUMBER}"
+            checkout scm
+            sh "docker build -t unionized-api:${version} -f api/Dockerfile"
+            sh "docker build -t unionized-web:${version} -f web/Dockerfile"
+        }
+
+        tools {
+            git 'Default'
+        }
+    }
+}

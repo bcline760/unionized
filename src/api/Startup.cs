@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
+using System.IO;
+using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,8 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 using Autofac;
-using Unionized.Api.Controllers;
-using Autofac.Core;
 using Unionized.Service;
 
 namespace Unionized.Api
@@ -63,6 +62,7 @@ namespace Unionized.Api
                 o.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
+            byte[] key = LoadEncryptionKey();
 
             services.AddAuthentication(x =>
             {
@@ -76,7 +76,7 @@ namespace Unionized.Api
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateTokenReplay = true,
-                    IssuerSigningKey = new X509SecurityKey(new X509Certificate2(config.Certificate.CertificateLocation, config.Certificate.Password)),
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = !IsDevelopment,
                     ValidateAudience = !IsDevelopment
                 };
@@ -86,6 +86,7 @@ namespace Unionized.Api
                 o.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
             });
         }
+
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -118,6 +119,35 @@ namespace Unionized.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private byte[] LoadEncryptionKey()
+        {
+            byte[] encryptionKey = null;
+            string path = $"{Environment.CurrentDirectory}/unionized.key";
+            if (File.Exists("unionized.key"))
+            {
+                using (FileStream fs = File.OpenRead(path))
+                {
+                    encryptionKey = new byte[fs.Length];
+                    int bytesRead = fs.Read(encryptionKey);
+                }
+            }
+            else
+            {
+                using (RSA rsa = RSA.Create())
+                {
+                    encryptionKey = rsa.ExportRSAPrivateKey();
+
+                    // Write the key to disk for future use.
+                    using (FileStream fs = File.OpenWrite(path))
+                    {
+                        fs.Write(encryptionKey);
+                    }
+                }
+            }
+
+            return encryptionKey;
         }
     }
 }

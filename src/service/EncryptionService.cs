@@ -55,9 +55,12 @@ namespace Unionized.Service
             return sb.ToString();
         }
 
-        public string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, X509Certificate2 signingCertificate, string issuer, string audience)
+        public string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, string issuer, string audience)
         {
-            SigningCredentials signingCredentials = new X509SigningCredentials(signingCertificate);
+            byte[] key = LoadEncryptionKey();
+            var ssk = new SymmetricSecurityKey(key);
+            var signingCredentials = new SigningCredentials(ssk, SecurityAlgorithms.HmacSha256Signature);
+
             var jwtHandler = new JwtSecurityTokenHandler();
             var tokenDesc = new SecurityTokenDescriptor
             {
@@ -75,9 +78,11 @@ namespace Unionized.Service
             return token;
         }
 
-        public ClaimsPrincipal ValidateJwt(string token, X509Certificate2 signingCertificate, string issuer, string audience)
+        public ClaimsPrincipal ValidateJwt(string token, string issuer, string audience)
         {
-            SigningCredentials signingCredentials = new X509SigningCredentials(signingCertificate);
+            byte[] key = LoadEncryptionKey();
+            var ssk = new SymmetricSecurityKey(key);
+            var signingCredentials = new SigningCredentials(ssk, SecurityAlgorithms.HmacSha256Signature);
 
             var handler = new JwtSecurityTokenHandler();
             var validationParams = new TokenValidationParameters
@@ -180,6 +185,35 @@ namespace Unionized.Service
             }
 
             return canDeserialize;
+        }
+
+        private byte[] LoadEncryptionKey()
+        {
+            byte[] encryptionKey = null;
+            string path = $"{Environment.CurrentDirectory}/unionized.key";
+            if (File.Exists("unionized.key"))
+            {
+                using (FileStream fs = File.OpenRead(path))
+                {
+                    encryptionKey = new byte[fs.Length];
+                    int bytesRead = fs.Read(encryptionKey);
+                }
+            }
+            else
+            {
+                using (RSA rsa = RSA.Create())
+                {
+                    encryptionKey = rsa.ExportRSAPrivateKey();
+
+                    // Write the key to disk for future use.
+                    using (FileStream fs = File.OpenWrite(path))
+                    {
+                        fs.Write(encryptionKey);
+                    }
+                }
+            }
+
+            return encryptionKey;
         }
     }
 }

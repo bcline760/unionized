@@ -2,8 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.6-buster-slim-arm32v7 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 5500
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src

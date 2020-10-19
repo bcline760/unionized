@@ -41,10 +41,9 @@ namespace Unionized.Contract.Service
         /// <returns>The serialized and signed JWT</returns>
         /// <param name="claims">Claims.</param>
         /// <param name="tokenExpiry">The amount of time in minutes the token lasts</param>
-        /// <param name="signingCertificate">A certificate to use to sign the JWT.</param>
         /// <param name="issuer">String to identify the issuer of the token</param>
         /// <param name="audience">The valid audience of the token. This is usually your domain name.</param>
-        string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, X509Certificate2 signingCertificate, string issuer, string audience);
+        string GenerateJwt(ClaimsIdentity claims, DateTime tokenExpiry, string issuer, string audience);
 
         /// <summary>
         /// 
@@ -54,6 +53,6 @@ namespace Unionized.Contract.Service
         /// <param name="issuer"></param>
         /// <param name="audience"></param>
         /// <returns></returns>
-        ClaimsPrincipal ValidateJwt(string token, X509Certificate2 signingCertificate, string issuer, string audience);
+        ClaimsPrincipal ValidateJwt(string token, string issuer, string audience);
     }
 }

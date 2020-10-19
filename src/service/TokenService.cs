@@ -39,12 +39,6 @@ namespace Unionized.Service
 
         public async Task<UserToken> GenerateAuthenticationTokenAsync(TokenRequest request)
         {
-            var certificate = Encryption.LoadCertificate(Config.Certificate.CertificateLocation, Config.Certificate.Password);
-
-            //Make sure the incoming certificate matches what is configured.
-            if (certificate.Thumbprint.ToLowerInvariant() != Config.Certificate.Thumbprint.ToLowerInvariant())
-                throw new InvalidOperationException("Certificate used does not match the thumbprint configured. This could be a man-in-the-middle attack.");
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Expiration,request.Expiration.ToString()),
@@ -63,7 +57,6 @@ namespace Unionized.Service
             var token = Encryption.GenerateJwt(
                 claimsId,
                 request.Expiration,
-                certificate,
                 request.Issuer,
                 request.Audience
             );
@@ -92,9 +85,7 @@ namespace Unionized.Service
 
         public ClaimsPrincipal ValidateToken(string token, string audience, string issuer)
         {
-            var certificate = Encryption.LoadCertificate(Config.Certificate.CertificateLocation, Config.Certificate.Password);
-
-            var principal = Encryption.ValidateJwt(token, certificate, issuer, audience);
+            var principal = Encryption.ValidateJwt(token, issuer, audience);
 
             return principal;
         }
