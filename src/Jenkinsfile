@@ -14,7 +14,8 @@ pipeline {
     stage ('Push to Docker Hub') {
         steps {
             version = "1.0.${BUILD_NUMBER}"
-            sh "docker push unionized:${version}"
+            sh "docker push unionized-api:${version}"
+            sh "docker push unionized-web:${version}"
         }
     }
 }
