@@ -31,11 +31,11 @@ namespace Unionized.Model.Database
             builder.Register(r =>
             {
                 var config = r.Resolve<UnionizedConfiguration>();
-                var connectString = config.ConnectionString.Replace("<password>", HttpUtility.UrlEncode(config.ServiceAccount.Password));
+                var connectString = config.ConnectionString;
 
                 var settings = MongoClientSettings.FromUrl(MongoUrl.Create(connectString));
                 var client = new MongoClient(settings);
-                IMongoDatabase db = client.GetDatabase("unionized"); //TODO: Not hardcode
+                IMongoDatabase db = client.GetDatabase(config.DatabaseName); //TODO: Not hardcode
                 return db;
             }).As<IMongoDatabase>().SingleInstance();
 

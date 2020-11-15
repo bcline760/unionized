@@ -92,11 +92,13 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "unionized-web:build"
+            "browserTarget": "unionized-web:build",
+            "ssl": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "unionized-web:build:production"
+              "browserTarget": "unionized-web:build:production",
+              "ssl": true
             }
           }
         },

@@ -92,8 +92,13 @@ namespace Unionized.Api
         {
             var config = Configuration.Get<UnionizedConfiguration>();
 
-            string path = string.Format(config.Certificate.CertificateLocation, ".");
-            config.Certificate.CertificateLocation = path;
+            config.ConnectionString = Environment.GetEnvironmentVariable("DB_CONNECT_STRING");
+            config.DatabaseName = Environment.GetEnvironmentVariable("DB_NAME");
+            config.HomeAssistant.ApiKey = Environment.GetEnvironmentVariable("HA_API_KEY");
+            config.HomeAssistant.Endpoint = Environment.GetEnvironmentVariable("HA_ENDPOINT");
+            config.LdapSettings.ServerName = Environment.GetEnvironmentVariable("LDAP_SERVER");
+            config.ServiceAccount.Name = Environment.GetEnvironmentVariable("SVC_ACCOUNT_NAME");
+            config.ServiceAccount.Password = Environment.GetEnvironmentVariable("SVC_ACCOUNT_PASSWORD");
 
             builder.RegisterInstance(config).SingleInstance();
             RegisterModules.Register(builder, config);

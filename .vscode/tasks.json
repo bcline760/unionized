@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "dotnet build",
             "command": "dotnet",
             "type": "process",
             "group": {
@@ -30,31 +30,46 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/src/api/Unionized.Api.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
             "type": "npm",
-            "script": "start",
-            "label": "ng serve",
+            "script": "build",
+            "label": "Angular build",
             "isBackground": true,
             "presentation": {
                 "focus": true,
                 "panel": "dedicated"
             },
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "group": "none",
+            "path": "./src/web/",
+            "problemMatcher": {
+                "owner": "typescript",
+                "source": "ts",
+                "applyTo": "closedDocuments",
+                "fileLocation": [
+                    "relative",
+                    "${cwd}"
+                ],
+                "pattern": "$tsc",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": {
+                        "regexp": "(.*?)"
+                    },
+                    "endsPattern": {
+                        "regexp": "Compiled |Failed to compile."
+                    }
+                }
+            }
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "label": "Angular serve",
+            "isBackground": true,
+            "presentation": {
+                "focus": true,
+                "panel": "dedicated"
             },
+            "group": "none",
             "path": "./src/web/",
             "problemMatcher": {
                 "owner": "typescript",

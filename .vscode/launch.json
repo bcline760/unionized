@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Launch API",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "dotnet build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/api/bin/Debug/netcoreapp3.1/Unionized.Api.dll",
             "args": [],
@@ -33,11 +33,11 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": "ng serve",
+            "name": "Launch Angular",
             "type": "chrome",
             "request": "launch",
-            "preLaunchTask": "ng serve",
-            "url": "http://localhost:4200",
+            "preLaunchTask": "Angular serve",
+            "url": "https://localhost:4200",
             "webRoot": "${workspaceFolder}/src/web",
             "sourceMapPathOverrides": {
                 "webpack:/*": "${webRoot}/*",
@@ -46,6 +46,15 @@
                 "/*": "*",
                 "/./~/*": "${webRoot}/node_modules/*"
             }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch Application",
+            "configurations": [
+                "Launch API",
+                "Launch Angular"
+            ]
         }
     ]
 }
