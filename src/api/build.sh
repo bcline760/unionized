@@ -39,11 +39,11 @@ while getopts c:d:h:H:l:p:r:s:S:u:v: optname; do
         BUILD_VERSION=${OPTARG}
         ;;
     \?)
-        echo 'Usage: build.sh -pruv [arg] [arg] ...'
+        echo 'Usage: build.sh -cdhHlpsSuv [arg] [arg] ...'
         exit 2
         ;;
     : )
-        echo 'Usage: build.sh -pruv [arg] [arg] ...'
+        echo 'Usage: build.sh -cdhHlpsSuv [arg] [arg] ...'
         exit 2
         ;;
     esac
@@ -52,7 +52,7 @@ done
 echo 'Building image...'
 docker build \
 -t $DOCKER_USERNAME/unionized-api:$BUILD_VERSION \
---build-arg dbConnectStr="'$CONNECT_STR'" \
+--build-arg dbConnectStr=$CONNECT_STR \
 --build-arg dbName=$DB_NAME \
 --build-arg haApiKey=$HA_API_KEY \
 --build-arg haEndpoint=$HA_ENDPOINT \

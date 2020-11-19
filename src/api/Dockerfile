@@ -1,12 +1,4 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-ARG dbConnectStr
-ARG dbName
-ARG haApiKey
-ARG haEndpoint
-ARG ldapServer
-ARG svcAccountUser
-ARG svcAccountPassword
-
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.403-buster AS build
 WORKDIR /src
 
@@ -26,16 +18,26 @@ RUN dotnet publish "Unionized.Api.csproj" --nologo -v q -c Release --no-build -o
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.6-buster-slim-arm32v7 AS runtime
 WORKDIR /app
-EXPOSE 5001
+EXPOSE 80
+EXPOSE 443
 
 FROM runtime AS final
+ARG dbConnectStr
+ARG dbName
+ARG haApiKey
+ARG haEndpoint
+ARG ldapServer
+ARG svcAccountUser
+ARG svcAccountPassword
+
 WORKDIR /app
-ENV DB_CONNECT_STR=${dbConnectStr}
-ENV DB_NAME=${dbName}
-ENV HA_API_KEY=${haApiKey}
-ENV HA_ENDPOINT=${haEndpoint}
-ENV LDAP_SERVER=${ldapServer}
-ENV SVC_ACCOUNT_PASSWORD=${svcAccountPassword}
-ENV SVC_ACCOUNT_USER=${svcAccountUser}
 COPY --from=publish /app/publish .
+
+ENV DB_CONNECT_STR=$dbConnectStr
+ENV DB_NAME=$dbName
+ENV HA_API_KEY=$haApiKey
+ENV HA_ENDPOINT=$haEndpoint
+ENV LDAP_SERVER=$ldapServer
+ENV SVC_ACCOUNT_PASSWORD=$svcAccountPassword
+ENV SVC_ACCOUNT_USER=$svcAccountUser
 ENTRYPOINT ["dotnet", "Unionized.Api.dll"]
