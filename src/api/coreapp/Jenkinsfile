@@ -1,0 +1,12 @@
+version = "1.0.${BUILD_NUMBER}"
+
+node {
+    stage ('Build image') {
+        checkout scm
+        withCredentials([
+            usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'username', passwordVariable: 'password')
+        ]) {
+            sh(script: "bash src/api/build.sh -p ${password} -r ${registry_url} -u ${username} -v ${version}", returnStdout: true)
+        }
+    }
+}

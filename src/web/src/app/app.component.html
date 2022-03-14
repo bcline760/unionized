@@ -1,0 +1,14 @@
+<div class="page">
+  <div *ngIf="showFullLayout">
+    <div class="left-column">
+      <app-navigation></app-navigation>
+    </div>
+    <div class="right-column">
+      <app-header></app-header>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <div *ngIf="!showFullLayout">
+    <router-outlet></router-outlet>
+  </div>
+</div>

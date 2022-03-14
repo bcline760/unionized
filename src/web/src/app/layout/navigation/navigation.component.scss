@@ -1,0 +1,44 @@
+@import "../../../theme/custom.scss";
+
+.nav-container {
+  background-color: $complementary-dark;
+  height: 100vh;
+}
+
+.main-img {
+  height: 10rem;
+  width: 10rem;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2em;
+
+  background-image: url(../../../assets/main_logo_bw.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.nav-menu {}
+
+.nav-menu .menu-item {
+  padding: 1rem;
+  font-size: large;
+  color: #FFF;
+}
+
+.nav-menu .menu-item a:link {
+  color: $primary-color;
+}
+
+.nav-menu .menu-item a:hover {
+  color: $complementary-light;
+}
+
+.nav-menu .menu-item a:visited {
+  color: $shade-lighter;
+}
+
+.nav-menu .menu-item a:active {
+  color: $shade-darker;
+}

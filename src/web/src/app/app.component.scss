@@ -1,0 +1,19 @@
+@import "../theme/custom.scss";
+
+.page {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page .left-column {
+  float: left;
+  width: 15em;
+  height: 100vh;
+}
+
+.page .right-column {
+  float: right;
+  width: calc(100% - 15em);
+  height: 100vh;
+  overflow: auto;
+}

@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+@import "theme/custom.scss";
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss"; 
+
+html {
+  display: block;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+a,
+a:link {
+  color: $shade-darker;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:visited {
+  color: $complementary-dark;
+}
+
+a:hover {
+  color: $complementary-light;
+}
+
+a:active {
+  color: $danger-color;
+}
+
+.form-control {
+  border: 1px solid $shade-darker;
+}
+
+.window {
+  border: 1px solid $primary-color;
+  border-radius: 0.5rem;
+  box-shadow: 5px 8px 10px grey;
+}
+
+.window .window-title {
+  font-size: larger;
+  padding: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  font-weight: bold;
+  color: $shade-darker;
+}
+
+.window .window-body {
+  padding: 0.5rem;
+  border-radius: 1rem;
+}
+
