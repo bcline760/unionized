@@ -5,7 +5,7 @@ using AutoMapper;
 using MongoDB.Driver;
 
 using Unionized.Contract;
-using Unionized.Contract.Repository;
+using Unionized.Interface.Repository;
 using Unionized.Model.Database.Repository;
 
 namespace Unionized.Model.Database
@@ -19,7 +19,6 @@ namespace Unionized.Model.Database
                 var config = new MapperConfiguration(cfg =>
                   {
                       cfg.CreateMap<NetworkLog, NetworkLogModel>().ReverseMap();
-                      cfg.CreateMap<UserToken, UserTokenModel>().ReverseMap();
                       cfg.CreateMap<MonitoredServer, MonitoredServersModel>().ReverseMap();
                   });
 
@@ -40,7 +39,6 @@ namespace Unionized.Model.Database
             }).As<IMongoDatabase>().SingleInstance();
 
             builder.RegisterType<NetworkLogRepository>().As<INetworkLogRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<TokenRepository>().As<ITokenRepository>().InstancePerLifetimeScope();
             builder.RegisterType<MonitoredServersRepository>().As<IMonitorServersRepository>().InstancePerLifetimeScope();
 
             base.Load(builder);

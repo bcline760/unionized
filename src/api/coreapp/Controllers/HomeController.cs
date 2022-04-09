@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Unionized.Contract;
-using Unionized.Contract.Service;
+using Unionized.Interface.Service;
 
 namespace Unionized.Api.Controllers
 {

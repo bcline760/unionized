@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Unionized.Contract;
-using Unionized.Contract.Repository;
-using Unionized.Contract.Service;
+using Unionized.Interface.Repository;
+using Unionized.Interface.Service;
 
 namespace Unionized.Service
 {

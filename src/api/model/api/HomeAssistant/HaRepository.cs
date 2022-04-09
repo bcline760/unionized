@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Newtonsoft.Json;
 using Unionized.Contract;
-using Unionized.Contract.Repository;
+using Unionized.Interface.Repository;
 using Newtonsoft.Json.Linq;
 
 namespace Unionized.Model.API.HomeAssistant

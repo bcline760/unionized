@@ -45,7 +45,7 @@ namespace Unionized.Api
                     .AddEnvironmentVariables();
             }
 
-            this.Configuration = builder.Build();
+            Configuration = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -61,30 +61,6 @@ namespace Unionized.Api
             {
                 o.AddPolicy("CorsPolicy", b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
-            byte[] key = LoadEncryptionKey();
-
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = true;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateTokenReplay = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = !IsDevelopment,
-                    ValidateAudience = !IsDevelopment
-                };
-            });
-            services.AddAuthorization(o =>
-            {
-                o.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
-            });
         }
 
 
@@ -96,9 +72,6 @@ namespace Unionized.Api
             config.DatabaseName = Environment.GetEnvironmentVariable("DB_NAME");
             config.HomeAssistant.ApiKey = Environment.GetEnvironmentVariable("HA_API_KEY");
             config.HomeAssistant.Endpoint = Environment.GetEnvironmentVariable("HA_ENDPOINT");
-            config.LdapSettings.ServerName = Environment.GetEnvironmentVariable("LDAP_SERVER");
-            config.ServiceAccount.Name = Environment.GetEnvironmentVariable("SVC_ACCOUNT_NAME");
-            config.ServiceAccount.Password = Environment.GetEnvironmentVariable("SVC_ACCOUNT_PASSWORD");
 
             builder.RegisterInstance(config).SingleInstance();
             RegisterModules.Register(builder, config);
@@ -124,35 +97,6 @@ namespace Unionized.Api
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private byte[] LoadEncryptionKey()
-        {
-            byte[] encryptionKey = null;
-            string path = $"{Environment.CurrentDirectory}/unionized.key";
-            if (File.Exists("unionized.key"))
-            {
-                using (FileStream fs = File.OpenRead(path))
-                {
-                    encryptionKey = new byte[fs.Length];
-                    int bytesRead = fs.Read(encryptionKey);
-                }
-            }
-            else
-            {
-                using (RSA rsa = RSA.Create())
-                {
-                    encryptionKey = rsa.ExportRSAPrivateKey();
-
-                    // Write the key to disk for future use.
-                    using (FileStream fs = File.OpenWrite(path))
-                    {
-                        fs.Write(encryptionKey);
-                    }
-                }
-            }
-
-            return encryptionKey;
         }
     }
 }

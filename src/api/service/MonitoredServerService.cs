@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Text;
 
 using Unionized.Contract;
-using Unionized.Contract.Service;
-using Unionized.Contract.Repository;
+using Unionized.Interface.Service;
+using Unionized.Interface.Repository;
 
 namespace Unionized.Service
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Autofac;
-using Unionized.Contract.Service;
+using Unionized.Interface.Service;
 
 namespace Unionized.Service
 {
@@ -9,9 +9,6 @@ namespace Unionized.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<LdapService>().As<ILdapService>().InstancePerLifetimeScope();
-            builder.RegisterType<SessionService>().As<ISessionService>().InstancePerLifetimeScope();
-            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
             builder.RegisterType<NetworkLogService>().As<INetworkLogService>().InstancePerLifetimeScope();
             builder.RegisterType<MonitoredServerService>().As<IMonitoredServerService>().InstancePerLifetimeScope();

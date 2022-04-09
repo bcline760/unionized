@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-using Unionized.Contract.Repository;
+using Unionized.Interface.Repository;
 using Unionized.Model.API.HomeAssistant;
 
 namespace Unionized.Model.API

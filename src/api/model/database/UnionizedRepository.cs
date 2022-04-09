@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using MongoDB.Driver;
 
 using Unionized.Contract;
-using Unionized.Contract.Repository;
+using Unionized.Interface.Repository;
 using Unionized.Model;
 
 using AutoMapper;

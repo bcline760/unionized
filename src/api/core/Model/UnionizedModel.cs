@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 namespace Unionized.Model.Database
 {
     [BsonIgnoreExtraElements, BsonDiscriminator(RootClass = true)]
-    [BsonKnownTypes(typeof(NetworkLogModel), typeof(UserTokenModel), typeof(MonitoredServersModel))]
+    [BsonKnownTypes(typeof(NetworkLogModel), typeof(MonitoredServersModel))]
     public abstract class UnionizedModel
     {
         [BsonRepresentation(BsonType.ObjectId)]

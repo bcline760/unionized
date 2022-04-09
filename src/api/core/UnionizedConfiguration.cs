@@ -14,10 +14,6 @@ namespace Unionized
 
         public bool IsDevelopment { get; set; }
 
-        public LdapSettings LdapSettings { get; set; }
-
-        public ServiceAccount ServiceAccount { get; set; }
-
         public ApiEndpoint HomeAssistant { get; set; }
     }
 

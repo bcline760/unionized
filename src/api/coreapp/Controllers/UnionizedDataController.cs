@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using Unionized.Contract;
-using Unionized.Contract.Service;
+using Unionized.Interface.Service;
 
 namespace Unionized.Api.Controllers
 {

@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using Unionized.Contract.Service;
+using Unionized.Interface.Service;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Unionized.Service

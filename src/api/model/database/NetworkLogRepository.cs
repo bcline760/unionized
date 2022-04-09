@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using AutoMapper;
 
 using Unionized.Contract;
-using Unionized.Contract.Repository;
+using Unionized.Interface.Repository;
 
 namespace Unionized.Model.Database.Repository
 {
